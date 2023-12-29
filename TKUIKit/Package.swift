@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "TKUIKit",
+    platforms: [.iOS(.v14)],
     products: [
         .library(
             name: "TKUIKit",
@@ -15,6 +16,8 @@ let package = Package(
     targets: [
         .target(
             name: "TKUIKit",
-            dependencies: [])
+            dependencies: [],
+            resources: [.process("Resources/Fonts")]
+        )
     ]
 )
