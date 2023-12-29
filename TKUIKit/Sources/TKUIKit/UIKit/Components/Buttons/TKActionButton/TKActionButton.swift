@@ -1,7 +1,7 @@
 import UIKit
 
-public final class TKActionButton: TKButtonContainer<TKActionButtonContentView> {
-  public typealias Model = TKButtonContainer<TKActionButtonContentView>.Model
+public final class TKActionButton: TKButton<TKActionButtonContentView> {
+  public typealias Model = TKButton<TKActionButtonContentView>.Model
   
   public init(size: TKActionButtonSize,
               category: TKButtonCategory) {
@@ -9,9 +9,9 @@ public final class TKActionButton: TKButtonContainer<TKActionButtonContentView> 
       content: TKActionButtonContentView(
         size: size, category: category
       ), 
-      category: category,
-      cornerRadius: size.cornerRadius
+      category: category
     )
+    self.cornerRadius = size.cornerRadius
   }
   
   required init?(coder: NSCoder) {

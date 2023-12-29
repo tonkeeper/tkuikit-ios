@@ -1,18 +1,15 @@
 import UIKit
 
-public protocol TKButtonContainerContent: UIView, ConfigurableView {
+public protocol TKButtonContent: UIView, ConfigurableView {
   var padding: UIEdgeInsets { get }
   var buttonState: TKButtonState { get set }
 }
 
-public class TKButtonContainer<Content: TKButtonContainerContent>: UIControl, ConfigurableView {
-  private let backgroundView: TKButtonBackgroundView
+public class TKButton<Content: TKButtonContent>: UIControl, ConfigurableView {
   
-  private var tapAction: (() -> Void)?
-  
-  private var buttonState: TKButtonState = .normal {
+  public var cornerRadius: CGFloat = 0 {
     didSet {
-      setupState()
+      backgroundView.cornerRadius = cornerRadius
     }
   }
   
@@ -30,17 +27,23 @@ public class TKButtonContainer<Content: TKButtonContainerContent>: UIControl, Co
     }
   }
   
+  private let backgroundView: TKButtonBackgroundView
+  private var tapAction: (() -> Void)?
+  private var buttonState: TKButtonState = .normal {
+    didSet {
+      setupState()
+    }
+  }
+  
   let content: Content
   let category: TKButtonCategory
   
   init(content: Content,
-       category: TKButtonCategory,
-       cornerRadius: CGFloat) {
+       category: TKButtonCategory) {
     self.content = content
     self.category = category
     self.backgroundView = TKButtonBackgroundView(
-      category: category,
-      cornerRadius: cornerRadius
+      category: category
     )
     super.init(frame: .zero)
     setup()
@@ -79,9 +82,11 @@ public class TKButtonContainer<Content: TKButtonContainerContent>: UIControl, Co
   }
 }
 
-private extension TKButtonContainer {
+private extension TKButton {
   func setup() {
     addTarget(self, action: #selector(touchUpInsideAction), for: .touchUpInside)
+    
+    backgroundView.cornerRadius = cornerRadius
     
     addSubview(backgroundView)
     setupContent()

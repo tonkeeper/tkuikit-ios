@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKActionButtonContentView: UIView, TKButtonContainerContent {
+public final class TKActionButtonContentView: UIView, TKButtonContent {
   public var padding: UIEdgeInsets {
     size.padding
   }
@@ -18,8 +18,8 @@ public final class TKActionButtonContentView: UIView, TKButtonContainerContent {
   let size: TKActionButtonSize
   let category: TKButtonCategory
   
-  init(size: TKActionButtonSize,
-       category: TKButtonCategory) {
+  public init(size: TKActionButtonSize,
+              category: TKButtonCategory) {
     self.size = size
     self.category = category
     super.init(frame: .zero)

@@ -19,10 +19,8 @@ final class TKButtonBackgroundView: UIView {
   
   private let maskLayer = CAShapeLayer()
   
-  init(category: TKButtonCategory, 
-       cornerRadius: CGFloat = 0) {
+  init(category: TKButtonCategory) {
     self.category = category
-    self.cornerRadius = cornerRadius
     super.init(frame: .zero)
     setup()
   }
