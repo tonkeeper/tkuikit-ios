@@ -1,6 +1,6 @@
 import UIKit
 
-public enum TKActionButtonSize {
+public enum TKUIActionButtonSize {
   case small
   case medium
   case large

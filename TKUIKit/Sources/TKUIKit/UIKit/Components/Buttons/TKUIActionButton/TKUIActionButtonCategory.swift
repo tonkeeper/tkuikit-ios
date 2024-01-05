@@ -1,6 +1,6 @@
 import UIKit
 
-public enum TKButtonCategory {
+public enum TKUIActionButtonCategory {
   case primary
   case secondary
   case tertiary

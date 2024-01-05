@@ -2,10 +2,10 @@ import UIKit
 
 public final class TKUIActionButton: TKUIButton<TKUIButtonTitleIconContentView, TKUIButtonDefaultBackgroundView> {
   
-  private let category: TKButtonCategory
-  private let size: TKActionButtonSize
+  private let category: TKUIActionButtonCategory
+  private let size: TKUIActionButtonSize
   
-  public init(category: TKButtonCategory, size: TKActionButtonSize) {
+  public init(category: TKUIActionButtonCategory, size: TKUIActionButtonSize) {
     self.category = category
     self.size = size
     super.init(
@@ -44,7 +44,7 @@ public final class TKUIActionButton: TKUIButton<TKUIButtonTitleIconContentView, 
   }
 }
 
-private extension TKActionButtonSize {
+private extension TKUIActionButtonSize {
   var loaderSize: TKLoaderView.Size {
     switch self {
     case .small:
