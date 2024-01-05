@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKUIHeaderButtonIconContentView: UIView, ConfigurableView, TKUIButtonContentView {
+public final class TKUIHeaderButtonIconContentView: UIView, ConfigurableView {
   let iconImageView = UIImageView()
   
   override init(frame: CGRect) {

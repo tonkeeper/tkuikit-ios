@@ -1,14 +1,6 @@
 import UIKit
 
-public protocol TKUIButtonContentView: UIView, ConfigurableView {
-  func setForegroundColor(_ color: UIColor)
-}
-
-public protocol TKUIButtonBackgroundView: UIView {
-  func setBackgroundColor(_ color: UIColor)
-}
-
-public class TKUIButton<ButtonContentView: TKUIButtonContentView, ButtonBackgroundView: TKUIButtonBackgroundView>: UIControl, ConfigurableView, TKUIAsyncButtonContentView {
+public class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBackgroundView: UIView>: UIControl, ConfigurableView, TKUIAsyncButtonContentView {
   public let buttonContentView: ButtonContentView
   public let backgroundView: ButtonBackgroundView
   public let contentHorizontalPadding: CGFloat

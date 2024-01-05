@@ -10,7 +10,8 @@ public final class TKUIActionButton: TKUIButton<TKUIButtonTitleIconContentView, 
     self.size = size
     super.init(
       contentView: TKUIButtonTitleIconContentView(
-        textStyle: size.textStyle),
+        textStyle: size.textStyle,
+        foregroundColor: category.titleColor),
       backgroundView: TKUIButtonDefaultBackgroundView(cornerRadius: size.cornerRadius),
       contentHorizontalPadding: size.padding.left
     )

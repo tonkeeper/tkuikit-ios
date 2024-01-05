@@ -1,15 +1,18 @@
 import UIKit
 
-public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView, TKUIButtonContentView {
+public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView {
   
   let stackView = UIStackView()
   let titleLabel = UILabel()
   let iconImageView = UIImageView()
   
   public let textStyle: TKTextStyle
+  public var foregroundColor: UIColor
   
-  init(textStyle: TKTextStyle) {
+  init(textStyle: TKTextStyle,
+       foregroundColor: UIColor) {
     self.textStyle = textStyle
+    self.foregroundColor = foregroundColor
     super.init(frame: .zero)
     setup()
   }
@@ -45,14 +48,9 @@ public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView, TKU
     self.model = model
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     
-    if let title = model.title {
+    if model.title != nil {
       stackView.addArrangedSubview(titleLabel)
-      titleLabel.text = title
-      titleLabel.attributedText = title.withTextStyle(
-        textStyle,
-        color: UIColor.Button.primaryForeground,
-        alignment: .center
-      )
+      updateTitle()
     }
     if let icon = model.icon {
       switch icon.position {
@@ -66,11 +64,8 @@ public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView, TKU
   }
   
   public func setForegroundColor(_ color: UIColor) {
-    titleLabel.attributedText = model.title?.withTextStyle(
-      textStyle,
-      color: color,
-      alignment: .center
-    )
+    self.foregroundColor = color
+    updateTitle()
     iconImageView.tintColor = color
   }
 }
@@ -97,5 +92,13 @@ private extension TKUIButtonTitleIconContentView {
       stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
       stackView.rightAnchor.constraint(equalTo: rightAnchor)
     ])
+  }
+  
+  func updateTitle() {
+    titleLabel.attributedText = model.title?.withTextStyle(
+      textStyle,
+      color: foregroundColor,
+      alignment: .center
+    )
   }
 }

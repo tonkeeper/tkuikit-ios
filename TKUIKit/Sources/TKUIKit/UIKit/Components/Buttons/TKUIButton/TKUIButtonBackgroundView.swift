@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKUIButtonDefaultBackgroundView: UIView, TKUIButtonBackgroundView {
+public final class TKUIButtonDefaultBackgroundView: UIView {
   
   let cornerRadius: CGFloat
   

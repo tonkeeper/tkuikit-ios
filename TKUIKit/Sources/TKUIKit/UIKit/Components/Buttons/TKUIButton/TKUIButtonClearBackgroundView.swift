@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKUIButtonClearBackgroundView: UIView, TKUIButtonBackgroundView {
+public final class TKUIButtonClearBackgroundView: UIView {
   public func setBackgroundColor(_ color: UIColor) {}
   
   init() {

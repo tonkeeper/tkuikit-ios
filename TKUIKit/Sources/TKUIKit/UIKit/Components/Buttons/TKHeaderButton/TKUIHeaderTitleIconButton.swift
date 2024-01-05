@@ -3,7 +3,7 @@ import UIKit
 public final class TKUIHeaderTitleIconButton: TKUIButton<TKUIButtonTitleIconContentView, TKUIButtonDefaultBackgroundView> {
   public convenience init() {
     self.init(
-      contentView: TKUIButtonTitleIconContentView(textStyle: .label2),
+      contentView: TKUIButtonTitleIconContentView(textStyle: .label2, foregroundColor: .Button.primaryForeground),
       backgroundView: TKUIButtonDefaultBackgroundView(cornerRadius: 16),
       contentHorizontalPadding: 12
     )
