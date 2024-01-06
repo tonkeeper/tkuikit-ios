@@ -17,6 +17,7 @@ let package = Package(
         .target(
             name: "TKUIKit",
             dependencies: [],
+            path: "TKUIKit/Sources/TKUIKit",
             resources: [.process("Resources/Fonts")]
         )
     ]

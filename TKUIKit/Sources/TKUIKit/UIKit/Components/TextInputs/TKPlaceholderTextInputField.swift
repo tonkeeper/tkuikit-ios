@@ -19,9 +19,9 @@ public final class TKPlaceholderTextInputField: TKTextInputField<TKTextInputFiel
     var inputControl: TKTextInputFieldInputControl {
       switch self {
       case .singleline:
-        TKTextInputFieldTextFieldInputControl()
+        return TKTextInputFieldTextFieldInputControl()
       case .multiline:
-        TKTextInputFieldTextViewInputControl()
+        return TKTextInputFieldTextViewInputControl()
       }
     }
   }
