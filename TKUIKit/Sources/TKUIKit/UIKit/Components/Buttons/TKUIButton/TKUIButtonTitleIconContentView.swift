@@ -36,7 +36,7 @@ public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView {
     }
     public let title: String?
     public let icon: Icon?
-    public init(title: String?, icon: Icon?) {
+    public init(title: String? = nil, icon: Icon? = nil) {
       self.title = title
       self.icon = icon
     }
