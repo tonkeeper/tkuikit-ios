@@ -30,7 +30,6 @@ public final class TKUIActionButton: TKUIButton<TKUIButtonTitleIconContentView, 
     case .disabled:
       backgroundView.setBackgroundColor(category.disabledBackgroundColor)
       buttonContentView.setForegroundColor(category.disabledTitleColor)
-      
     case .highlighted:
       backgroundView.setBackgroundColor(category.highlightedBackgroundColor)
       buttonContentView.setForegroundColor(category.titleColor)
