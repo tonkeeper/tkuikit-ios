@@ -27,6 +27,20 @@ public extension UIImage {
           .withRenderingMode(.alwaysTemplate)
         }
       }
+      public enum Size36 {
+        public static var delete: UIImage {
+          .imageWithName("Icons/36/ic-delete-36")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var faceid: UIImage {
+          .imageWithName("Icons/36/ic-faceid-36")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var fingerprint: UIImage {
+          .imageWithName("Icons/36/ic-fingerprint-36")
+          .withRenderingMode(.alwaysTemplate)
+        }
+      }
     }
   }
 }
