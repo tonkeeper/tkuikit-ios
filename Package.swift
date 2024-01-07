@@ -10,6 +10,10 @@ let package = Package(
         .library(
             name: "TKUIKit",
             targets: ["TKUIKit"]),
+        .library(
+          name: "TKScreenKit",
+          targets: ["TKScreenKit"]
+        )
     ],
     dependencies: [
     ],
@@ -19,6 +23,13 @@ let package = Package(
             dependencies: [],
             path: "TKUIKit/Sources/TKUIKit",
             resources: [.process("Resources/Fonts")]
+        ),
+        .target(
+            name: "TKScreenKit",
+            dependencies: [
+              .target(name: "TKUIKit")
+            ],
+            path: "TKUIKit/Sources/TKScreenKit"
         )
     ]
 )
