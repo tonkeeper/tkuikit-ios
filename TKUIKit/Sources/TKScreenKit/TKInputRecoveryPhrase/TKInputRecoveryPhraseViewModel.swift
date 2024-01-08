@@ -2,7 +2,7 @@ import UIKit
 import TKUIKit
 
 public protocol TKInputRecoveryPhraseModuleOutput: AnyObject {
-  
+  var didInputRecoveryPhrase: (([String]) -> Void)? { get set }
 }
 
 protocol TKInputRecoveryPhraseViewModel: AnyObject {
@@ -30,6 +30,7 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   
   // MARK: - TKInputRecoveryPhraseModuleOutput
   
+  var didInputRecoveryPhrase: (([String]) -> Void)?
   
   // MARK: - TKInputRecoveryPhraseViewModel
   
@@ -172,7 +173,7 @@ private extension TKInputRecoveryPhraseViewModelImplementation {
         }
       } else {
         DispatchQueue.main.async {
-          print("IS VALID GO NEXT")
+          self.didInputRecoveryPhrase?(phrase)
         }
       }
     }
