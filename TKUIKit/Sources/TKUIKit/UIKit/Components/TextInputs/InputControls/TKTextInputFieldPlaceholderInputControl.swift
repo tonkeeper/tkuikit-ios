@@ -17,6 +17,11 @@ public final class TKTextInputFieldPlaceholderInputControl: UIView, TKTextInputF
     }
   }
   
+  public var accessoryView: UIView? {
+    get { inputControl.accessoryView }
+    set { inputControl.accessoryView = newValue }
+  }
+  
   public func setState(_ state: TKTextInputFieldState) {
     inputControl.setState(state)
   }

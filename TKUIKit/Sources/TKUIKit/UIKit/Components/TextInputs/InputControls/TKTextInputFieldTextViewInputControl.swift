@@ -50,6 +50,11 @@ public final class TKTextInputFieldTextViewInputControl: UIView, TKTextInputFiel
     }
   }
   
+  public var accessoryView: UIView? {
+    get { textView.inputAccessoryView }
+    set { textView.inputAccessoryView = newValue }
+  }
+  
   public func setState(_ state: TKTextInputFieldState) {
     textView.tintColor = state.tintColor
   }

@@ -8,6 +8,8 @@ public protocol TKTextInputFieldInputControl: UIView {
   
   var text: String { get set }
   
+  var accessoryView: UIView? { get set }
+  
   func setState(_ state: TKTextInputFieldState)
 }
 
@@ -40,6 +42,11 @@ public class TKTextInputField<InputControl: TKTextInputFieldInputControl>: UIVie
     didSet {
       setupState()
     }
+  }
+  
+  public var accessoryView: UIView? {
+    get { inputControl.accessoryView }
+    set { inputControl.accessoryView = newValue }
   }
   
   public let inputControl: InputControl

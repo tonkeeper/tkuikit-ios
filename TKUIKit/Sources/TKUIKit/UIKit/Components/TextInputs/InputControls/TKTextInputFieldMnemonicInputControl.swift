@@ -17,6 +17,11 @@ public final class TKTextInputFieldMnemonicInputControl: UIView, TKTextInputFiel
     }
   }
   
+  public var accessoryView: UIView? {
+    get { inputControl.accessoryView }
+    set { inputControl.accessoryView = newValue }
+  }
+  
   public func setState(_ state: TKTextInputFieldState) {
     inputControl.setState(state)
   }
@@ -32,7 +37,7 @@ public final class TKTextInputFieldMnemonicInputControl: UIView, TKTextInputFiel
     let label = UILabel()
     label.font = TKTextStyle.body1.font
     label.textColor = .Text.secondary
-    label.textAlignment = .left
+    label.textAlignment = .right
     label.numberOfLines = 1
     label.isUserInteractionEnabled = false
     return label
@@ -95,8 +100,9 @@ private extension TKTextInputFieldMnemonicInputControl {
     indexNumberLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
     NSLayoutConstraint.activate([
-      indexNumberLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: .indexLabelLeftPadding),
+      indexNumberLabel.leftAnchor.constraint(equalTo: leftAnchor),
       indexNumberLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+      indexNumberLabel.widthAnchor.constraint(equalToConstant: 28),
       
       inputControl.heightAnchor.constraint(equalToConstant: 32),
       inputControl.topAnchor.constraint(equalTo: topAnchor),

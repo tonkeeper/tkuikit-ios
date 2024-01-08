@@ -14,6 +14,11 @@ public final class TKTextInputFieldTextFieldInputControl: UIView, TKTextInputFie
     }
   }
   
+  public var accessoryView: UIView? {
+    get { textField.inputAccessoryView }
+    set { textField.inputAccessoryView = newValue }
+  }
+  
   public let textField: UITextField = {
     let textField = UITextField()
     textField.backgroundColor = .clear
@@ -118,4 +123,3 @@ extension TKTextInputFieldTextFieldInputControl: UITextPasteDelegate {
     }
   }
 }
-

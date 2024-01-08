@@ -17,6 +17,11 @@ public final class TKTextInputFieldPasswordInputControl: UIView, TKTextInputFiel
     }
   }
   
+  public var accessoryView: UIView? {
+    get { inputControl.accessoryView }
+    set { inputControl.accessoryView = newValue }
+  }
+  
   public func setState(_ state: TKTextInputFieldState) {
     self.state = state
     inputControl.setState(state)
