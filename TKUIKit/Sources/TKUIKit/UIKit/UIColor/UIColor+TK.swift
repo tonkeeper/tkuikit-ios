@@ -63,7 +63,7 @@ public extension UIColor {
     public static let tonBlue = UIColor.named("Colors/Constant&System/TON Blue")
   }
   
-  private static func named(_ name: String) -> UIColor {
+  static func named(_ name: String) -> UIColor {
     let color = UIColor(named: name, in: .module, compatibleWith: nil)
     assert(color != nil, "Can't load color with name: \(name)")
     return color ?? .black
