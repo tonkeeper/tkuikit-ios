@@ -38,6 +38,10 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-clock-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var gear: UIImage {
+          .imageWithName("Icons/28/ic-gear-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size36 {
         public static var delete: UIImage {

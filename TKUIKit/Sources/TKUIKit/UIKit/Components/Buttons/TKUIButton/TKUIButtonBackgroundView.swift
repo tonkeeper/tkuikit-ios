@@ -4,7 +4,7 @@ public final class TKUIButtonDefaultBackgroundView: UIView {
   
   let cornerRadius: CGFloat
   
-  init(cornerRadius: CGFloat) {
+  public init(cornerRadius: CGFloat) {
     self.cornerRadius = cornerRadius
     super.init(frame: .zero)
   }

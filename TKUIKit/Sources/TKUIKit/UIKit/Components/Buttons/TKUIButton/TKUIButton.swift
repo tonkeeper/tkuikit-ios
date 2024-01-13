@@ -1,6 +1,6 @@
 import UIKit
 
-public class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBackgroundView: UIView>: UIControl, ConfigurableView, TKUIAsyncButtonContentView {
+open class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBackgroundView: UIView>: UIControl, ConfigurableView, TKUIAsyncButtonContentView {
   public let buttonContentView: ButtonContentView
   public let backgroundView: ButtonBackgroundView
   public let contentHorizontalPadding: CGFloat
@@ -64,7 +64,7 @@ public class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBack
     buttonContentView.configure(model: model)
   }
   
-  public func setupButtonState() {}
+  open func setupButtonState() {}
 
   public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
     bounds.inset(by: tapAreaInsets)

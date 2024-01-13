@@ -2,7 +2,11 @@ import UIKit
 
 public final class TKUIHeaderAccentIconButton: TKUIButton<TKUIHeaderButtonIconContentView, TKUIButtonClearBackgroundView> {
   
-  var foregroundColor: UIColor = .Accent.blue
+  public var foregroundColor: UIColor = .Accent.blue {
+    didSet {
+      setupButtonState()
+    }
+  }
   
   public convenience init() {
     self.init(

@@ -9,8 +9,8 @@ public final class TKUIButtonTitleIconContentView: UIView, ConfigurableView {
   public let textStyle: TKTextStyle
   public var foregroundColor: UIColor
   
-  init(textStyle: TKTextStyle,
-       foregroundColor: UIColor) {
+  public init(textStyle: TKTextStyle,
+              foregroundColor: UIColor) {
     self.textStyle = textStyle
     self.foregroundColor = foregroundColor
     super.init(frame: .zero)
