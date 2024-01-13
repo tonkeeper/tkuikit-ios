@@ -72,6 +72,7 @@ public class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBack
   }
   
   public func addTapAction(_ action: @escaping () -> Void) {
+    removeTarget(nil, action: nil, for: .touchUpInside)
     addAction(UIAction(handler: { _ in
       action()
     }), for: .touchUpInside)

@@ -107,6 +107,7 @@ private extension TKTitleDescriptionView {
     stackView.translatesAutoresizingMaskIntoConstraints = false
     
     stackView.setContentCompressionResistancePriority(.required, for: .vertical)
+    stackView.setContentHuggingPriority(.required, for: .vertical)
     
     stackViewTopAnchor = stackView.topAnchor.constraint(equalTo: topAnchor)
     stackViewLeftAnchor = stackView.leftAnchor.constraint(equalTo: leftAnchor)

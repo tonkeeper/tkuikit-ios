@@ -17,7 +17,7 @@ public extension TKTextInputFieldInputControl {
   func setState(_ state: TKTextInputFieldState) {}
 }
 
-public class TKTextInputField<InputControl: TKTextInputFieldInputControl>: UIView, TKTextInputFieldInputControl {
+open class TKTextInputField<InputControl: TKTextInputFieldInputControl>: UIView, TKTextInputFieldInputControl {
   
   public var isValid: Bool = true {
     didSet {
@@ -58,7 +58,7 @@ public class TKTextInputField<InputControl: TKTextInputFieldInputControl>: UIVie
     setup()
   }
   
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   

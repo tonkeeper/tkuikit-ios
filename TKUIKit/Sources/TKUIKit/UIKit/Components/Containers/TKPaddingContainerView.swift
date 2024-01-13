@@ -17,6 +17,13 @@ public final class TKPaddingContainerView: UIView {
     }
   }
   
+  public var backgroundView: UIView? {
+    didSet {
+      oldValue?.removeFromSuperview()
+      setupBackgroundView()
+    }
+  }
+  
   let stackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .vertical
@@ -25,16 +32,16 @@ public final class TKPaddingContainerView: UIView {
   }()
   
   private lazy var stackViewTopAnchor: NSLayoutConstraint = {
-    stackView.topAnchor.constraint(equalTo: topAnchor)
+    stackView.topAnchor.constraint(equalTo: topAnchor).withPriority(.defaultHigh)
   }()
   private lazy var stackViewLeftAnchor: NSLayoutConstraint = {
-    stackView.leftAnchor.constraint(equalTo: leftAnchor)
+    stackView.leftAnchor.constraint(equalTo: leftAnchor).withPriority(.defaultHigh)
   }()
   private lazy var stackViewRightAnchor: NSLayoutConstraint = {
-    stackView.rightAnchor.constraint(equalTo: rightAnchor)
+    stackView.rightAnchor.constraint(equalTo: rightAnchor).withPriority(.defaultHigh)
   }()
   private lazy var stackViewBottomAnchor: NSLayoutConstraint = {
-    stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+    stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).withPriority(.defaultHigh)
   }()
   
   public override init(frame: CGRect) {
@@ -63,6 +70,18 @@ private extension TKPaddingContainerView {
       stackViewLeftAnchor,
       stackViewBottomAnchor,
       stackViewRightAnchor
+    ])
+  }
+  
+  func setupBackgroundView() {
+    guard let backgroundView = backgroundView else { return }
+    insertSubview(backgroundView, belowSubview: stackView)
+    backgroundView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      backgroundView.topAnchor.constraint(equalTo: topAnchor).withPriority(.defaultHigh),
+      backgroundView.leftAnchor.constraint(equalTo: leftAnchor).withPriority(.defaultHigh),
+      backgroundView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).withPriority(.defaultHigh),
+      backgroundView.rightAnchor.constraint(equalTo: rightAnchor).withPriority(.defaultHigh),
     ])
   }
 }

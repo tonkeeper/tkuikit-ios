@@ -28,5 +28,9 @@ public extension UIColor {
     public static let color24 = UIColor.named("Colors/Tint/Color24")
     public static let color25 = UIColor.named("Colors/Tint/Color25")
     public static let color26 = UIColor.named("Colors/Tint/Color26")
+    
+    public static func color(with name: String) -> UIColor {
+      return UIColor.named("Colors/Tint/\(name)")
+    }
   }
 }

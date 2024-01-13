@@ -13,6 +13,7 @@ public final class TKTextInputFieldPlaceholderInputControl: UIView, TKTextInputF
       inputControl.text
     }
     set {
+      updatePlaceholderState(inputText: newValue)
       inputControl.text = newValue
     }
   }
@@ -50,7 +51,7 @@ public final class TKTextInputFieldPlaceholderInputControl: UIView, TKTextInputF
       .constraint(equalTo: inputControl.topAnchor, constant: .placeholderTopMargin)
   }()
   
-  init(inputControl: TKTextInputFieldInputControl) {
+  public init(inputControl: TKTextInputFieldInputControl) {
     self.inputControl = inputControl
     super.init(frame: .zero)
     setup()
