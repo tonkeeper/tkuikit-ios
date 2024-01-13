@@ -64,9 +64,9 @@ private extension TKUIIconButtonContentView {
     
     NSLayoutConstraint.activate([
       stackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-      stackView.leftAnchor.constraint(equalTo: leftAnchor),
-      stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-      stackView.rightAnchor.constraint(equalTo: rightAnchor)
+      stackView.leftAnchor.constraint(equalTo: leftAnchor).withPriority(.defaultHigh).withPriority(.defaultHigh),
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).withPriority(.defaultHigh),
+      stackView.rightAnchor.constraint(equalTo: rightAnchor).withPriority(.defaultHigh)
     ])
   }
   
