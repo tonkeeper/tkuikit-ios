@@ -42,6 +42,30 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-gear-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var arrowDownOutline: UIImage {
+          .imageWithName("Icons/28/ic-arrow-down-outline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var arrowUpOutline: UIImage {
+          .imageWithName("Icons/28/ic-arrow-up-outline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var qrViewFinderThin: UIImage {
+          .imageWithName("Icons/28/ic-qr-viewfinder-thin-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var stakingOutline: UIImage {
+          .imageWithName("Icons/28/ic-staking-outline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var swapHorizontalOutline: UIImage {
+          .imageWithName("Icons/28/ic-swap-horizontal-outline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var usd: UIImage {
+          .imageWithName("Icons/28/ic-usd-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size36 {
         public static var delete: UIImage {
