@@ -23,6 +23,11 @@ public struct TKTextStyle {
 }
 
 public extension TKTextStyle {
+  static let balance = TKTextStyle(
+    font: .montserratSemiBold(size: 44),
+    lineHeight: 56
+  )
+  
   static let num1: TKTextStyle = .init(
     font: .montserratSemiBold(size: 32),
     lineHeight: 40
