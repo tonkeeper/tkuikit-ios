@@ -3,6 +3,8 @@ import UIKit
 public enum TKGradientDirection {
   case topToBottom
   case bottomToTop
+  case leftToRight
+  case rightToLeft
 }
 
 public class TKGradientView: UIView {
@@ -40,6 +42,12 @@ public extension CAGradientLayer {
     case .bottomToTop:
       start = CGPoint(x: 0.5, y: 0)
       end = CGPoint(x: 0.5, y: 1)
+    case .leftToRight:
+      start = CGPoint(x: 1, y: 0.5)
+      end = CGPoint(x: 0, y: 0.5)
+    case .rightToLeft:
+      start = CGPoint(x: 0, y: 0.5)
+      end = CGPoint(x: 1, y: 0.5)
     }
     
     layer.colors = colors
