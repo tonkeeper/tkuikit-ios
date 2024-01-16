@@ -7,6 +7,8 @@ public final class TKUIButtonDefaultBackgroundView: UIView {
   public init(cornerRadius: CGFloat) {
     self.cornerRadius = cornerRadius
     super.init(frame: .zero)
+    setContentHuggingPriority(.required, for: .horizontal)
+    setContentCompressionResistancePriority(.required, for: .horizontal)
   }
   
   required init?(coder: NSCoder) {

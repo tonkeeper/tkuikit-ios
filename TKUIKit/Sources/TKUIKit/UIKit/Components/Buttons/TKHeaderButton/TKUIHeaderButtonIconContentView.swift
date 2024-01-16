@@ -31,6 +31,11 @@ public final class TKUIHeaderButtonIconContentView: UIView, ConfigurableView {
 
 private extension TKUIHeaderButtonIconContentView {
   func setup() {
+    setContentHuggingPriority(.required, for: .horizontal)
+    setContentCompressionResistancePriority(.required, for: .horizontal)
+    iconImageView.setContentHuggingPriority(.required, for: .horizontal)
+    iconImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+    
     iconImageView.contentMode = .center
     
     addSubview(iconImageView)

@@ -91,6 +91,9 @@ open class TKUIButton<ButtonContentView: UIView & ConfigurableView, ButtonBackgr
 
 private extension TKUIButton {
   func setup() {
+    setContentHuggingPriority(.required, for: .horizontal)
+    setContentCompressionResistancePriority(.required, for: .horizontal)
+    
     backgroundView.isUserInteractionEnabled = false
     buttonContentView.isUserInteractionEnabled = false
     

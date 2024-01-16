@@ -76,6 +76,10 @@ private extension TKUIButtonTitleIconContentView {
     stackView.axis = .horizontal
     stackView.spacing = 8
     
+    setContentCompressionResistancePriority(.required, for: .horizontal)
+    stackView.setContentCompressionResistancePriority(.required, for: .horizontal)
+    titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+    
     iconImageView.contentMode = .center
     
     addSubview(stackView)
