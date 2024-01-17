@@ -1,13 +1,19 @@
 import UIKit
 
-public final class TKPullCardHeaderView: UIView, ConfigurableView {
+public final class TKBottomSheetHeaderView: UIView, ConfigurableView {
   let titleLabel = UILabel()
   let subtitleLabel = UILabel()
   let closeButton = TKUIHeaderIconButton()
   let leftButtonContainer = UIView()
-  private let titleStackView: UIStackView = {
+  private let titleVerticalStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .vertical
+    return stackView
+  }()
+  private let titleHoriontalStackView: UIStackView = {
+    let stackView = UIStackView()
+    stackView.alignment = .center
+    stackView.axis = .horizontal
     return stackView
   }()
 
@@ -24,7 +30,13 @@ public final class TKPullCardHeaderView: UIView, ConfigurableView {
   
   // MARK: - ConfigurableView
   
-  public func configure(model: TKPullCardHeaderItem) {
+  public func configure(model: TKPullCardHeaderItem?) {
+    guard let model = model else {
+      titleLabel.text = nil
+      subtitleLabel.text = nil
+      leftButtonContainer.subviews.forEach { $0.removeFromSuperview() }
+      return
+    }
     titleLabel.attributedText = model.title.withTextStyle(
       .h3,
       color: .Text.primary,
@@ -37,6 +49,7 @@ public final class TKPullCardHeaderView: UIView, ConfigurableView {
     if let leftButtonModel = model.leftButton {
       let leftButton = TKUIHeaderTitleIconButton()
       leftButton.configure(model: leftButtonModel.model)
+      leftButton.addTapAction(leftButtonModel.action)
       leftButtonContainer.addSubview(leftButton)
       leftButton.translatesAutoresizingMaskIntoConstraints = false
       NSLayoutConstraint.activate([
@@ -57,24 +70,25 @@ public final class TKPullCardHeaderView: UIView, ConfigurableView {
   }
   
   lazy var titleCenterXConstraint: NSLayoutConstraint = {
-    titleStackView.centerXAnchor.constraint(equalTo: centerXAnchor)
+    titleVerticalStackView.centerXAnchor.constraint(equalTo: centerXAnchor).withPriority(.defaultHigh)
   }()
   lazy var titleLeftEdgeConstraint: NSLayoutConstraint = {
-    titleStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16)
+    titleVerticalStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16)
   }()
   lazy var titleLeftButtonConstraint: NSLayoutConstraint = {
-    titleStackView.leftAnchor.constraint(greaterThanOrEqualTo: leftButtonContainer.rightAnchor)
+    titleVerticalStackView.leftAnchor.constraint(greaterThanOrEqualTo: leftButtonContainer.rightAnchor)
   }()
 }
 
-private extension TKPullCardHeaderView {
+private extension TKBottomSheetHeaderView {
   func setup() {
     addSubview(closeButton)
     addSubview(leftButtonContainer)
-    addSubview(titleStackView)
+    addSubview(titleHoriontalStackView)
     
-    titleStackView.addArrangedSubview(titleLabel)
-    titleStackView.addArrangedSubview(subtitleLabel)
+    titleHoriontalStackView.addArrangedSubview(titleVerticalStackView)
+    titleVerticalStackView.addArrangedSubview(titleLabel)
+    titleVerticalStackView.addArrangedSubview(subtitleLabel)
     
     closeButton.configure(
       model: TKUIHeaderButtonIconContentView.Model(image: .TKUIKit.Icons.Size16.close)
@@ -84,7 +98,7 @@ private extension TKPullCardHeaderView {
   }
   
   func setupConstraints() {
-    titleStackView.translatesAutoresizingMaskIntoConstraints = false
+    titleHoriontalStackView.translatesAutoresizingMaskIntoConstraints = false
     closeButton.translatesAutoresizingMaskIntoConstraints = false
     leftButtonContainer.translatesAutoresizingMaskIntoConstraints = false
     
@@ -93,12 +107,13 @@ private extension TKPullCardHeaderView {
 
     NSLayoutConstraint.activate([
       closeButton.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-      closeButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),
+      closeButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).withPriority(.defaultHigh),
       closeButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).withPriority(.defaultHigh),
       
-      titleStackView.topAnchor.constraint(equalTo: topAnchor),
-      titleStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-      titleStackView.rightAnchor.constraint(lessThanOrEqualTo: closeButton.leftAnchor),
+      titleHoriontalStackView.topAnchor.constraint(equalTo: topAnchor),
+      titleHoriontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor).withPriority(.defaultHigh),
+      titleHoriontalStackView.rightAnchor.constraint(lessThanOrEqualTo: closeButton.leftAnchor),
+      titleHoriontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
       
       leftButtonContainer.topAnchor.constraint(equalTo: topAnchor, constant: 16),
       leftButtonContainer.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),

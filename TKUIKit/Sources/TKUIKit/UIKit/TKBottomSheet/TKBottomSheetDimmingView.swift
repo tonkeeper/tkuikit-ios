@@ -1,6 +1,6 @@
 import UIKit
 
-final class DimmingView: UIView {
+final class TKBottomSheetDimmingView: UIView {
   private let dismissAlpha: CGFloat
   private let presentAlpha: CGFloat
   
@@ -31,7 +31,7 @@ final class DimmingView: UIView {
   }
 }
 
-private extension DimmingView {
+private extension TKBottomSheetDimmingView {
   func setup() {
     backgroundColor = .black
   }

@@ -3,9 +3,9 @@ import UIKit
 public struct TKPullCardHeaderItem {
   public struct LeftButton {
     let model: TKUIHeaderTitleIconButton.Model
-    let action: (() -> Void)?
+    let action: (() -> Void)
     
-    public init(model: TKUIHeaderTitleIconButton.Model, action: (() -> Void)?) {
+    public init(model: TKUIHeaderTitleIconButton.Model, action: @escaping (() -> Void)) {
       self.model = model
       self.action = action
     }
@@ -33,19 +33,15 @@ public struct TKPullCardHeaderItem {
   }
 }
 
-public protocol TKPullCardContent: UIViewController {
+
+public protocol TKBottomSheetContentViewController: UIViewController {
   var didUpdateHeight: (() -> Void)? { get set }
   
-  var headerItem: TKPullCardHeaderItem { get }
+  var headerItem: TKPullCardHeaderItem? { get }
   var didUpdatePullCardHeaderItem: ((TKPullCardHeaderItem) -> Void)? { get set }
-  
-  func contentHeight(withWidth width: CGFloat) -> CGFloat
 }
 
-public extension TKPullCardContent {
-  var didUpdatePullCardHeaderItem: ((TKPullCardHeaderItem) -> Void)? { nil }
-}
-
-public protocol TKPullCardScrollableContent: TKPullCardContent {
+public protocol TKBottomSheetScrollContentViewController: TKBottomSheetContentViewController {
   var scrollView: UIScrollView { get }
 }
+
