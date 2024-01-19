@@ -12,6 +12,10 @@ public extension UIImage {
           .imageWithName("Icons/16/ic-chevron-left-16")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var chevronRight: UIImage {
+          .imageWithName("Icons/16/ic-chevron-right-16")
+          .withRenderingMode(.alwaysTemplate)
+        }
         public static var close: UIImage {
           .imageWithName("Icons/16/ic-close-16")
           .withRenderingMode(.alwaysTemplate)
@@ -64,6 +68,14 @@ public extension UIImage {
         }
         public static var usd: UIImage {
           .imageWithName("Icons/28/ic-usd-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var donemarkOutline: UIImage {
+          .imageWithName("Icons/28/ic-donemark-otline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var reorder: UIImage {
+          .imageWithName("Icons/28/ic-reorder-28")
           .withRenderingMode(.alwaysTemplate)
         }
       }
