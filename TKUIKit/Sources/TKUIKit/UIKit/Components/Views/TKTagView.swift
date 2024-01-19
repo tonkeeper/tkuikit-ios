@@ -2,6 +2,10 @@ import UIKit
 
 public final class TKTagView: UIView, ConfigurableView {
   
+  struct Layout {
+    let titleFrame: CGRect
+  }
+  
   let titleLabel = UILabel()
   
   public override init(frame: CGRect) {
@@ -16,14 +20,17 @@ public final class TKTagView: UIView, ConfigurableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    titleLabel.frame = bounds.inset(by: .titlePadding)
+    let titleTargetSize = bounds.size.inset(by: .titlePadding)
+    let titleFittingSize = titleLabel.systemLayoutSizeFitting(titleTargetSize)
+    let titleSize = CGSize(width: min(titleTargetSize.width, titleFittingSize.width), height: titleFittingSize.height)
+    titleLabel.frame = CGRect(origin: CGPoint(x: UIEdgeInsets.titlePadding.left, y: UIEdgeInsets.titlePadding.top), 
+                              size: titleSize)
   }
-  
-  public override func sizeThatFits(_ size: CGSize) -> CGSize {
-    let titleContainerSize = size.inset(by: .titlePadding)
-    let titleSize = titleLabel.sizeThatFits(titleContainerSize)
-    let paddingTitleSize = titleSize.padding(by: .titlePadding)
-    return CGSize(width: min(size.width, paddingTitleSize.width), height: paddingTitleSize.height)
+
+  public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+    let titleTargetSize = targetSize.inset(by: .titlePadding)
+    let titleSize = titleLabel.systemLayoutSizeFitting(titleTargetSize)
+    return titleSize.padding(by: .titlePadding)
   }
   
   public struct Model {
@@ -61,6 +68,7 @@ private extension UIEdgeInsets {
     UIEdgeInsets(top: 2.5, left: 5, bottom: 3.5, right: 5)
   }
 }
+
 
 public extension CGSize {
   func inset(by insets: UIEdgeInsets) -> CGSize {
