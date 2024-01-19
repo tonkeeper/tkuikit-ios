@@ -47,8 +47,8 @@ private extension TKKeyboardView {
     NSLayoutConstraint.activate([
       stackView.topAnchor.constraint(equalTo: topAnchor),
       stackView.leftAnchor.constraint(equalTo: leftAnchor),
-      stackView.bottomAnchor.constraint(equalTo: bottomAnchor).withPriority(.defaultHigh),
-      stackView.rightAnchor.constraint(equalTo: rightAnchor).withPriority(.defaultHigh)
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+      stackView.rightAnchor.constraint(equalTo: rightAnchor)
     ])
   }
   
