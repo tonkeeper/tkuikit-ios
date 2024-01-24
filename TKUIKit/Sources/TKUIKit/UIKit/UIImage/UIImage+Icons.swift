@@ -78,6 +78,18 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-reorder-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var plusCircle: UIImage {
+          .imageWithName("Icons/28/ic-plus-circle-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var key: UIImage {
+          .imageWithName("Icons/28/ic-key-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var testnet: UIImage {
+          .imageWithName("Icons/28/ic-testnet-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size36 {
         public static var delete: UIImage {
