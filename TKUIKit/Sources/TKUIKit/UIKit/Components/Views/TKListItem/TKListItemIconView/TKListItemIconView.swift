@@ -2,7 +2,9 @@ import UIKit
 
 public final class TKListItemIconView: UIView, ConfigurableView {
   
-  var contentView: UIView?
+  private var contentView: UIView?
+  
+  private var alignment: Model.Alignment = .top
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -16,31 +18,62 @@ public final class TKListItemIconView: UIView, ConfigurableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    contentView?.frame = bounds
+    let size = contentView?.systemLayoutSizeFitting(bounds.size) ?? .zero
+    let frame: CGRect
+    switch alignment {
+    case .top:
+      frame = CGRect(origin: .zero, size: size)
+    case .center:
+      frame = CGRect(origin: CGPoint(x: 0, y: bounds.height/2 - size.height/2), size: size)
+    }
+    contentView?.frame = frame
     
-    layer.cornerRadius = .imageViewSide/2
+    contentView?.layer.cornerRadius = size.height/2
   }
   
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
-    CGSize(width: .imageViewSide, height: .imageViewSide)
+    contentView?.systemLayoutSizeFitting(targetSize) ?? .zero
   }
 
-  public enum Model {
-    case emoji(emoji: String, backgroundColor: UIColor)
+  public struct Model {
+    public enum IconType {
+      case emoji(model: TKListItemIconEmojiContentView.Model)
+      case image(model: TKListItemIconImageContentView.Model)
+    }
+    
+    public enum Alignment {
+      case top
+      case center
+    }
+    
+    public let type: IconType
+    public let alignment: Alignment
+    
+    public init(type: IconType,
+                alignment: Alignment = .top) {
+      self.type = type
+      self.alignment = alignment
+    }
   }
   
   public func configure(model: Model) {
     self.contentView?.removeFromSuperview()
-    switch model {
-    case let .emoji(emoji, backgroundColor):
-      let contentView = TKListItemIconEmojiContentView()
-      contentView.configure(model: TKListItemIconEmojiContentView.Model(
-        emoji: emoji,
-        backgroundColor: backgroundColor)
-      )
-      addSubview(contentView)
-      self.contentView = contentView
-    }
+    let contentView: UIView = {
+      switch model.type {
+      case let .emoji(emojiModel):
+        let view = TKListItemIconEmojiContentView()
+        view.configure(model: emojiModel)
+        return view
+      case let .image(imageModel):
+        let view = TKListItemIconImageContentView()
+        view.configure(model: imageModel)
+        return view
+      }
+    }()
+    contentView.layer.masksToBounds = true
+    addSubview(contentView)
+    self.contentView = contentView
+    self.alignment = model.alignment
   }
 }
 
@@ -48,9 +81,5 @@ private extension TKListItemIconView {
   func setup() {
     layer.masksToBounds = true
   }
-}
-
-private extension CGFloat {
-  static let imageViewSide: CGFloat = 44
 }
 

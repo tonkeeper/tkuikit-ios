@@ -51,8 +51,8 @@ public final class TKTextWithTagView: UIView, ConfigurableView {
   }
     
   public struct Model {
-    let title: NSAttributedString
-    let tagViewModel: TKTagView.Model?
+    public let title: NSAttributedString
+    public let tagViewModel: TKTagView.Model?
     
     public init(title: NSAttributedString,
                 tagViewModel: TKTagView.Model? = nil) {
@@ -81,6 +81,7 @@ public final class TKTextWithTagView: UIView, ConfigurableView {
 
 private extension TKTextWithTagView {
   func setup() {
+    titleLabel.contentMode = .redraw
     addSubview(titleLabel)
     addSubview(tagView)
   }

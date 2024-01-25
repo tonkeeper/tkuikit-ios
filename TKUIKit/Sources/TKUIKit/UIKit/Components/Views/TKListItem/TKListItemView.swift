@@ -2,7 +2,7 @@ import UIKit
 
 public final class TKListItemView: UIView, ConfigurableView {
   let iconView = TKListItemIconView()
-  let textContenView = TKListItemTextContentView()
+  let textContentView = TKListItemTextContentView()
 
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -22,25 +22,25 @@ public final class TKListItemView: UIView, ConfigurableView {
     if !iconView.isHidden {
       let iconFittingSize = iconView.systemLayoutSizeFitting(bounds.size)
       iconView.frame = CGRect(origin: CGPoint(x: originX, y: 0),
-                              size: iconFittingSize)
+                              size: CGSize(width: iconFittingSize.width, height: bounds.height))
       estimatedWidth -= iconFittingSize.width + .textContentLeftPadding
       originX = iconView.frame.maxX + .textContentLeftPadding
     }
     
-    let textContenViewFittingSize = textContenView.systemLayoutSizeFitting(CGSize(width: estimatedWidth, height: 0))
+    let textContenViewFittingSize = textContentView.systemLayoutSizeFitting(CGSize(width: estimatedWidth, height: 0))
     let textContentViewSize = CGSize(
       width: min(estimatedWidth, textContenViewFittingSize.width),
       height: textContenViewFittingSize.height
     )
     
-    textContenView.frame = CGRect(origin: CGPoint(x: originX, y: bounds.height/2 - textContentViewSize.height/2),
+    textContentView.frame = CGRect(origin: CGPoint(x: originX, y: bounds.height/2 - textContentViewSize.height/2),
                                   size: textContentViewSize)
   }
   
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
     if iconView.isHidden {
-      let textContentFittingSize = textContenView.systemLayoutSizeFitting(
-        CGSize(width: bounds.width,
+      let textContentFittingSize = textContentView.systemLayoutSizeFitting(
+        CGSize(width: targetSize.width,
                height: targetSize.height)
       )
       let resultWidth = textContentFittingSize.width
@@ -52,11 +52,10 @@ public final class TKListItemView: UIView, ConfigurableView {
       var estimatedWidth = targetSize.width - iconFittingSize.width
       estimatedWidth -= .textContentLeftPadding
       
-      let textContentFittingSize = textContenView.systemLayoutSizeFitting(
+      let textContentFittingSize = textContentView.systemLayoutSizeFitting(
         CGSize(width: estimatedWidth,
                height: targetSize.height)
       )
-      
       let resultWidth = iconFittingSize.width + .textContentLeftPadding + textContentFittingSize.width
       let resultHeight = max(iconFittingSize.height, textContentFittingSize.height)
       return CGSize(width: resultWidth, height: resultHeight)
@@ -81,7 +80,7 @@ public final class TKListItemView: UIView, ConfigurableView {
     } else {
       iconView.isHidden = true
     }
-    textContenView.configure(model: model.textContentModel)
+    textContentView.configure(model: model.textContentModel)
     setNeedsLayout()
   }
 }
@@ -89,7 +88,7 @@ public final class TKListItemView: UIView, ConfigurableView {
 private extension TKListItemView {
   func setup() {
     addSubview(iconView)
-    addSubview(textContenView)
+    addSubview(textContentView)
   }
 }
 
