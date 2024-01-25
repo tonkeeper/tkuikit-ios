@@ -1,10 +1,6 @@
 import UIKit
 
-public final class CollectionViewSupplementaryContainerView: UICollectionReusableView {
-  public static var reuseIdentifier: String {
-    String(describing: Self.self)
-  }
-  
+public final class CollectionViewSupplementaryContainerView: UICollectionReusableView, ReusableView {
   private var contentView: UIView?
   
   public func setContentView(_ contentView: UIView?) {
