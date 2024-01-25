@@ -8,6 +8,7 @@ public final class TKPaddingContainerView: UIView {
       stackViewLeftAnchor.constant = padding.left
       stackViewBottomAnchor.constant = -padding.bottom
       stackViewRightAnchor.constant = -padding.right
+      stackViewWidthAnchor.constant = -(padding.left + padding.right)
     }
   }
   
@@ -43,6 +44,9 @@ public final class TKPaddingContainerView: UIView {
   private lazy var stackViewBottomAnchor: NSLayoutConstraint = {
     stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).withPriority(.defaultHigh)
   }()
+  private lazy var stackViewWidthAnchor: NSLayoutConstraint = {
+    stackView.widthAnchor.constraint(equalTo: widthAnchor).withPriority(.defaultHigh)
+  }()
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -69,7 +73,8 @@ private extension TKPaddingContainerView {
       stackViewTopAnchor,
       stackViewLeftAnchor,
       stackViewBottomAnchor,
-      stackViewRightAnchor
+      stackViewRightAnchor,
+      stackViewWidthAnchor
     ])
   }
   
