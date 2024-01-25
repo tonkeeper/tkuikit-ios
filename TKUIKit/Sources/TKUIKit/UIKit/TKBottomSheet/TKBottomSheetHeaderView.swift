@@ -67,6 +67,7 @@ public final class TKBottomSheetHeaderView: UIView, ConfigurableView {
       titleLeftButtonConstraint.isActive = false
       titleLeftEdgeConstraint.isActive = true
     }
+//    layoutIfNeeded()
   }
   
   lazy var titleCenterXConstraint: NSLayoutConstraint = {
@@ -82,6 +83,7 @@ public final class TKBottomSheetHeaderView: UIView, ConfigurableView {
 
 private extension TKBottomSheetHeaderView {
   func setup() {
+    backgroundColor = .Background.page
     addSubview(closeButton)
     addSubview(leftButtonContainer)
     addSubview(titleHoriontalStackView)

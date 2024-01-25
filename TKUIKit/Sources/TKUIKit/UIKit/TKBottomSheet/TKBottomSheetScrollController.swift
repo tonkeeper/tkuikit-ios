@@ -48,15 +48,13 @@ private extension TKBottomSheetScrollController {
         startTranslationOffset = yTranslation
         
         didStartDragging?()
-        print("🤢 start dragging")
       }
       
       if self.isDragging {
         let offset = yTranslation - startTranslationOffset
         if offset < 0 {
           self.isDragging = false
-          didEndDragging?(0, 0)
-          print("🤢 stop dragging")
+          didEndDragging?(offset, yVelocity)
         } else {
           scrollView.contentOffset.y = 0
           didDrag?(offset)
@@ -65,8 +63,7 @@ private extension TKBottomSheetScrollController {
     case .ended:
       if self.isDragging {
         self.isDragging = false
-        didEndDragging?(0, 0)
-        print("🤢 stop dragging")
+        didEndDragging?(yTranslation, yVelocity)
       }
       
     default: break
