@@ -2,7 +2,7 @@ import UIKit
 import TKUIKit
 
 public protocol TKInputRecoveryPhraseModuleOutput: AnyObject {
-  var didInputRecoveryPhrase: (([String]) -> Void)? { get set }
+  var didInputRecoveryPhrase: (([String], (() -> Void)) -> Void)? { get set }
 }
 
 protocol TKInputRecoveryPhraseViewModel: AnyObject {
@@ -30,7 +30,7 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   
   // MARK: - TKInputRecoveryPhraseModuleOutput
   
-  var didInputRecoveryPhrase: (([String]) -> Void)?
+  var didInputRecoveryPhrase: (([String], (() -> Void)) -> Void)?
   
   // MARK: - TKInputRecoveryPhraseViewModel
   
@@ -101,7 +101,7 @@ private extension TKInputRecoveryPhraseViewModelImplementation {
       titleDescriptionModel: titleDescriptionModel,
       inputs: inputs,
       continueButtonModel: continueButtonModel,
-      continueButtonAction: { [weak self] in self?.continueButtonAction() }
+      continueButtonAction: { [weak self] in await self?.continueButtonAction() }
     )
   }
   
@@ -158,25 +158,31 @@ private extension TKInputRecoveryPhraseViewModelImplementation {
     return false
   }
   
-  func continueButtonAction() {
-    dispatchQueue.async { [weak self, phrase] in
-      guard let self = self else { return }
-      let isPhraseValid = self.validator.validatePhrase(phrase)
-      if !isPhraseValid {
-        let wordsValidation = phrase.map {
-          self.validator.validateWord($0)
-        }
-        DispatchQueue.main.async {
-          wordsValidation.enumerated().forEach { index, isValid in
-            self.didUpdateInputValidationState?(index, isValid)
+  func continueButtonAction() async {
+    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+      dispatchQueue.async { [weak self, phrase] in
+        guard let self = self else { return }
+        let isPhraseValid = self.validator.validatePhrase(phrase)
+        if !isPhraseValid {
+          let wordsValidation = phrase.map {
+            self.validator.validateWord($0)
           }
-        }
-      } else {
-        DispatchQueue.main.async {
-          self.didInputRecoveryPhrase?(phrase)
+          DispatchQueue.main.async {
+            wordsValidation.enumerated().forEach { index, isValid in
+              self.didUpdateInputValidationState?(index, isValid)
+            }
+          }
+        } else {
+          DispatchQueue.main.async {
+            let closure = {
+              continuation.resume()
+            }
+            self.didInputRecoveryPhrase?(phrase, closure)
+          }
         }
       }
     }
+    
   }
   
   func updateSuggests(index: Int) {

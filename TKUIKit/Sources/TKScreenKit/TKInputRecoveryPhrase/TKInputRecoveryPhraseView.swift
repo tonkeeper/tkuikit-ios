@@ -24,7 +24,10 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
   
   var inputTextFields = [TKMnemonicTextInputField]()
   
-  let continueButton = TKUIActionButton(category: .primary, size: .large)
+  let continueButton: TKUIAsyncButton = {
+    let button = TKUIAsyncButton(content: TKUIActionButton(category: .primary, size: .large))
+    return button
+  }()
   let continueButtonContainer = TKPaddingContainerView()
   
   let suggestsView = TKInputRecoveryPhraseSuggestsView()
@@ -59,12 +62,12 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
     public let titleDescriptionModel: TKTitleDescriptionView.Model
     public let inputs: [InputModel]
     public let continueButtonModel: TKUIActionButton.Model
-    public let continueButtonAction: () -> Void
+    public let continueButtonAction: () async -> Void
     
     public init(titleDescriptionModel: TKTitleDescriptionView.Model,
                 inputs: [InputModel],
                 continueButtonModel: TKUIActionButton.Model,
-                continueButtonAction: @escaping () -> Void) {
+                continueButtonAction: @escaping () async -> Void) {
       self.titleDescriptionModel = titleDescriptionModel
       self.inputs = inputs
       self.continueButtonModel = continueButtonModel
