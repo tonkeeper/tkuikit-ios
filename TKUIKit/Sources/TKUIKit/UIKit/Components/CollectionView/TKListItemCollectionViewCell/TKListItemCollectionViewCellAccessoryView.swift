@@ -48,11 +48,11 @@ extension TKListItemCollectionViewCell {
     
     override func layoutSubviews() {
       super.layoutSubviews()
-      imageView.frame = bounds
+      imageView.frame = CGRect(x: 16, y: 0, width: bounds.width - .leftPadding, height: bounds.height)
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
-      let width = mode == .none ? 28 : imageView.systemLayoutSizeFitting(.zero).width
+      let width = mode == .none ? 0 : imageView.systemLayoutSizeFitting(.zero).width + .leftPadding
       return CGSize(width: width, height: targetSize.height)
     }
   }
@@ -63,4 +63,8 @@ private extension TKListItemCollectionViewCell.AccessoryView {
     imageView.contentMode = .left
     addSubview(imageView)
   }
+}
+
+private extension CGFloat {
+  static let leftPadding: CGFloat = 16
 }
