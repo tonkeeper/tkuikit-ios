@@ -2,7 +2,7 @@ import UIKit
 import TKUIKit
 
 public protocol TKInputRecoveryPhraseModuleOutput: AnyObject {
-  var didInputRecoveryPhrase: (([String], (() -> Void)) -> Void)? { get set }
+  var didInputRecoveryPhrase: (([String], @escaping (() -> Void)) -> Void)? { get set }
 }
 
 protocol TKInputRecoveryPhraseViewModel: AnyObject {
@@ -30,7 +30,7 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   
   // MARK: - TKInputRecoveryPhraseModuleOutput
   
-  var didInputRecoveryPhrase: (([String], (() -> Void)) -> Void)?
+  var didInputRecoveryPhrase: (([String], @escaping (() -> Void)) -> Void)?
   
   // MARK: - TKInputRecoveryPhraseViewModel
   
