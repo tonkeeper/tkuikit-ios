@@ -1,12 +1,12 @@
 import UIKit
 
 public struct TKCollectionLayout {
-  enum SupplementaryItem: String {
+  public enum SupplementaryItem: String {
     case header = "TKCollectionLayout.SupplementaryItem.Header"
     case footer = "TKCollectionLayout.SupplementaryItem.Footer"
   }
   
-  static func createLayout(section: @escaping (Int) -> TKCollectionSection?,
+  public static func createLayout(section: @escaping (Int) -> TKCollectionSection?,
                            sectionPaddingProvider: @escaping (TKCollectionSection) -> NSDirectionalEdgeInsets) -> UICollectionViewLayout {
     let header = createHeaderSupplementaryItem()
     let footer = createFooterSupplementaryItem()
