@@ -1,8 +1,13 @@
 import UIKit
 
-public final class TKListItemIconImageContentView: UIView, ConfigurableView, ReusableView {
+public final class TKListItemIconAsyncImageContentView: UIView, ConfigurableView, ReusableView {
   
   let imageView = UIImageView()
+
+  private var imageProvider: ((UIImageView, CGSize) async throws -> Void)?
+  private var task: Task<Void, Never>?
+  
+  private var cachedSize: CGSize = .zero
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -17,38 +22,46 @@ public final class TKListItemIconImageContentView: UIView, ConfigurableView, Reu
     super.layoutSubviews()
     
     imageView.frame = bounds
+    
+    if bounds.size != cachedSize && imageProvider != nil {
+      cachedSize = bounds.size
+      task = Task {
+        try? await imageProvider?(imageView, bounds.size)
+      }
+    }
   }
   
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
-    imageView.systemLayoutSizeFitting(targetSize)
+    CGSize(width: 44, height: 44)
   }
   
   public func prepareForReuse() {
-    imageView.image = nil
+    task?.cancel()
+    task = nil
   }
   
   public struct Model {
-    public let image: UIImage
+    public let imageProvider: ((UIImageView, CGSize) async throws -> Void)
     public let tintColor: UIColor
     public let backgroundColor: UIColor
     
-    public init(image: UIImage,
+    public init(imageProvider: @escaping ((UIImageView, CGSize) async throws -> Void),
                 tintColor: UIColor,
                 backgroundColor: UIColor) {
-      self.image = image
+      self.imageProvider = imageProvider
       self.tintColor = tintColor
       self.backgroundColor = backgroundColor
     }
   }
   
   public func configure(model: Model) {
-    imageView.image = model.image
     imageView.tintColor = model.tintColor
     backgroundColor = model.backgroundColor
+    imageProvider = model.imageProvider
   }
 }
 
-private extension TKListItemIconImageContentView {
+private extension TKListItemIconAsyncImageContentView {
   func setup() {
     imageView.contentMode = .center
     addSubview(imageView)

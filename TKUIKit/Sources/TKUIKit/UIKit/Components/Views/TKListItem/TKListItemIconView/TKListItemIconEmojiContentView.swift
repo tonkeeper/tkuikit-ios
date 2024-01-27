@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKListItemIconEmojiContentView: UIView, ConfigurableView {
+public final class TKListItemIconEmojiContentView: UIView, ConfigurableView, ReusableView {
   
   let emojiLabel = UILabel()
   
@@ -24,7 +24,7 @@ public final class TKListItemIconEmojiContentView: UIView, ConfigurableView {
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
     CGSize(width: .imageViewSide, height: .imageViewSide)
   }
-  
+
   public struct Model {
     public let emoji: String
     public let backgroundColor: UIColor

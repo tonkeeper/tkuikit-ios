@@ -164,6 +164,7 @@ public final class TKListItemCollectionViewCell: UICollectionViewCell, Configura
     super.prepareForReuse()
     isFirstInSection = { _ in false }
     isLastInSection = { _ in false }
+    listItemView.prepareForReuse()
   }
 }
 

@@ -20,31 +20,32 @@ public final class TKListItemTextContentView: UIView, ConfigurableView {
     let textWithTagFittingSize = textWithTagView.systemLayoutSizeFitting(bounds.size)
     let textWithTagSize = CGSize(width: min(bounds.width, textWithTagFittingSize.width),
                                  height: textWithTagFittingSize.height)
-//    if subtitleLabel.isHidden {
-//      textWithTagView.frame = CGRect(origin: CGPoint(x: 0, y: bounds.height/2 - textWithTagSize.height/2),
-//                                     size: textWithTagSize)
-//    } else {
-      let subtitleFittingSize = subtitleLabel.systemLayoutSizeFitting(bounds.size)
-      let subtitleSize = CGSize(width: min(bounds.width, subtitleFittingSize.width),
-                                height: subtitleFittingSize.height)
+    let subtitleFittingSize = subtitleLabel.systemLayoutSizeFitting(bounds.size)
+    let subtitleSize = CGSize(width: min(bounds.width, subtitleFittingSize.width),
+                              height: subtitleFittingSize.height)
     let descriptionSize = descriptionLabel.systemLayoutSizeFitting(bounds.size)
-      
-      textWithTagView.frame = CGRect(origin: CGPoint(x: 0, y: 0),
-                                     size: textWithTagSize)
-      subtitleLabel.frame = CGRect(origin: CGPoint(x: 0, y: textWithTagView.frame.maxY),
-                                   size: subtitleSize)
-    descriptionLabel.frame = CGRect(origin: CGPoint(x: 0, y: subtitleLabel.frame.maxY),
+    
+    
+    descriptionLabel.frame = CGRect(origin: CGPoint(x: 0, y: bounds.height - descriptionSize.height),
                                     size: descriptionSize)
-//    }
+    
+    subtitleLabel.frame = CGRect(origin: CGPoint(x: 0, y: descriptionLabel.frame.maxY - subtitleSize.height),
+                                 size: subtitleSize)
+    
+    let textWithTagViewY = min(subtitleLabel.frame.minY - textWithTagSize.height, bounds.height/2 - textWithTagSize.height/2)
+    
+    textWithTagView.frame = CGRect(origin: CGPoint(x: 0, y: textWithTagViewY),
+                                   size: textWithTagSize)
   }
   
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
     let textWithTagSize = textWithTagView.systemLayoutSizeFitting(targetSize)
     let subtitleSize = subtitleLabel.systemLayoutSizeFitting(targetSize)
     let descriptionSize = descriptionLabel.systemLayoutSizeFitting(targetSize)
+    let resultHeight = textWithTagSize.height + subtitleSize.height + descriptionSize.height
     let resultSize = CGSize(
       width: targetSize.width,
-      height: textWithTagSize.height + subtitleSize.height + descriptionSize.height
+      height: max(resultHeight, 44)
     )
     return resultSize
   }

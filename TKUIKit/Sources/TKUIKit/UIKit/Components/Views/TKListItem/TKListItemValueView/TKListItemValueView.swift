@@ -2,31 +2,31 @@ import UIKit
 
 public final class TKListItemValueView: UIView, ConfigurableView {
   
-  private var valueContainerView: UIView?
+  private var contentView: UIView?
 
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    valueContainerView?.frame = bounds
+    contentView?.frame = bounds
   }
   
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
-    valueContainerView?.systemLayoutSizeFitting(targetSize) ?? .zero
+    contentView?.systemLayoutSizeFitting(targetSize) ?? .zero
   }
   
   public enum Model {
-    case defaultValue(TKListItemDefaultValueView.Model)
+    case textContent(TKListItemValueTextContentView.Model)
   }
   
   public func configure(model: Model) {
-    valueContainerView?.removeFromSuperview()
+    contentView?.removeFromSuperview()
     
     switch model {
-    case .defaultValue(let model):
-      let view = TKListItemDefaultValueView()
+    case .textContent(let model):
+      let view = TKListItemValueTextContentView()
       view.configure(model: model)
       addSubview(view)
-      self.valueContainerView = view
+      self.contentView = view
     }
     setNeedsLayout()
   }

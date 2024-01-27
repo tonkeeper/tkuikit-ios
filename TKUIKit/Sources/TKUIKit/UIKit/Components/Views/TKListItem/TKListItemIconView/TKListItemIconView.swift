@@ -1,8 +1,8 @@
 import UIKit
 
-public final class TKListItemIconView: UIView, ConfigurableView {
+public final class TKListItemIconView: UIView, ConfigurableView, ReusableView {
   
-  private var contentView: UIView?
+  private var contentView: ReusableView?
   
   private var alignment: Model.Alignment = .top
   
@@ -34,11 +34,16 @@ public final class TKListItemIconView: UIView, ConfigurableView {
   public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
     contentView?.systemLayoutSizeFitting(targetSize) ?? .zero
   }
+  
+  public func prepareForReuse() {
+    contentView?.prepareForReuse()
+  }
 
   public struct Model {
     public enum IconType {
       case emoji(model: TKListItemIconEmojiContentView.Model)
       case image(model: TKListItemIconImageContentView.Model)
+      case asyncImage(model: TKListItemIconAsyncImageContentView.Model)
     }
     
     public enum Alignment {
@@ -58,7 +63,7 @@ public final class TKListItemIconView: UIView, ConfigurableView {
   
   public func configure(model: Model) {
     self.contentView?.removeFromSuperview()
-    let contentView: UIView = {
+    let contentView: ReusableView = {
       switch model.type {
       case let .emoji(emojiModel):
         let view = TKListItemIconEmojiContentView()
@@ -67,6 +72,10 @@ public final class TKListItemIconView: UIView, ConfigurableView {
       case let .image(imageModel):
         let view = TKListItemIconImageContentView()
         view.configure(model: imageModel)
+        return view
+      case let .asyncImage(model):
+        let view = TKListItemIconAsyncImageContentView()
+        view.configure(model: model)
         return view
       }
     }()
