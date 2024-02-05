@@ -1,42 +1,24 @@
 import UIKit
 
-public protocol TKReorderableCell: UICollectionViewCell {
-  var isReordering: Bool { get set }
-}
-
-public final class TKCollectionController: NSObject {
-  public typealias Item = TKCollectionItemIdentifier
-  public typealias Section = TKCollectionSection
+open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, UICollectionViewDelegate {
   public typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-  public typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
   
-  public typealias ListItemCellRegistration = UICollectionView.CellRegistration
-  <TKListItemCollectionViewCell, TKListItemCollectionViewCell.Model>
-  public typealias HeaderRegistration = UICollectionView.SupplementaryRegistration
-  <CollectionViewSupplementaryContainerView>
-  public typealias FooterRegistration = UICollectionView.SupplementaryRegistration
-  <CollectionViewSupplementaryContainerView>
+  typealias HeaderSupplementaryRegistration = UICollectionView.SupplementaryRegistration<CollectionViewSupplementaryContainerView>
+  typealias FooterSupplementaryRegistration = UICollectionView.SupplementaryRegistration<CollectionViewSupplementaryContainerView>
   
-  public var isReordering: Bool = false {
-    didSet {
-      collectionView.visibleCells
-        .compactMap { $0 as? TKReorderableCell }
-        .forEach { $0.isReordering = isReordering }
-      reorderGesture.isEnabled = isReordering
-    }
-  }
-  
+  public var isSelectable: ((_ section: Section, _ index: Int) -> Bool)?
+  public var isHighlightable: ((_ section: Section, _ index: Int) -> Bool)?
+  public var isEditable: ((_ section: Section, _ index: Int) -> Bool)?
+  public var didSelect: ((_ section: Section, _ index: Int) -> Void)?
   public var didReorder: ((CollectionDifference<Item>) -> Void)?
   
-  private let collectionView: UICollectionView
-  private let sectionPaddingProvider: (TKCollectionSection) -> NSDirectionalEdgeInsets
-  private let headerViewProvider: (() -> UIView)?
-  private let footerViewProvider: (() -> UIView)?
-  
-  private let dataSource: DataSource
-  private let listItemCellRegistration: ListItemCellRegistration
-  private let headerRegistration: HeaderRegistration
-  private let footerRegistraation: FooterRegistration
+  public var isEditing: Bool {
+    get { collectionView.isEditing }
+    set {
+      collectionView.isEditing = newValue
+      reorderGesture.isEnabled = newValue
+    }
+  }
   
   private lazy var reorderGesture: UILongPressGestureRecognizer = {
     let gesture = UILongPressGestureRecognizer(
@@ -46,123 +28,96 @@ public final class TKCollectionController: NSObject {
     gesture.isEnabled = false
     return gesture
   }()
-
+  
+  public var dataSource: DataSource!
+  
+  private let headerRegistration: HeaderSupplementaryRegistration
+  private let footerRegistration: HeaderSupplementaryRegistration
+  
+  private let collectionView: UICollectionView
+  private let cellProvider: (UICollectionView, IndexPath, Item) -> TKCollectionViewCell?
+  private let headerViewProvider: (() -> UIView)?
+  private let footerViewProvider: (() -> UIView)?
   
   public init(collectionView: UICollectionView,
-              sectionPaddingProvider: @escaping (TKCollectionSection) -> NSDirectionalEdgeInsets,
+              cellProvider: @escaping (UICollectionView, IndexPath, Item) -> TKCollectionViewCell?,
               headerViewProvider: (() -> UIView)? = nil,
               footerViewProvider: (() -> UIView)? = nil) {
     self.collectionView = collectionView
-    self.sectionPaddingProvider = sectionPaddingProvider
+    self.cellProvider = cellProvider
     self.headerViewProvider = headerViewProvider
     self.footerViewProvider = footerViewProvider
     
-    let listItemCellRegistration = ListItemCellRegistration { cell, indexPath, itemIdentifier in
-      cell.configure(model: itemIdentifier)
-    }
-    self.listItemCellRegistration = listItemCellRegistration
-    
-    let headerRegistration = HeaderRegistration(elementKind: TKCollectionLayout.SupplementaryItem.header.rawValue) {
-      supplementaryView, elementKind, indexPath in
-      supplementaryView.setContentView(headerViewProvider?())
-    }
+    let headerRegistration = HeaderSupplementaryRegistration(
+      elementKind: TKCollectionSupplementaryItem.header.kind,
+      handler: { supplementaryView, elementKind, indexPath in
+        supplementaryView.setContentView(headerViewProvider?())
+      })
     self.headerRegistration = headerRegistration
     
-    let footerRegistration = FooterRegistration(elementKind: TKCollectionLayout.SupplementaryItem.footer.rawValue) { 
-      supplementaryView, elementKind, indexPath in
-      supplementaryView.setContentView(footerViewProvider?())
-    }
-    self.footerRegistraation = footerRegistration
-    
-    self.dataSource = DataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-      switch itemIdentifier.model {
-      case let model as TKListItemCollectionViewCell.Model:
-        let cell = collectionView.dequeueConfiguredReusableCell(
-          using: listItemCellRegistration,
-          for: indexPath,
-          item: model)
-        cell.accessoryType = itemIdentifier.accessoryViewType
-        cell.isSelectable = itemIdentifier.isSelectable
-        cell.isReordable = itemIdentifier.isReorderable
-        cell.isFirstInSection = { $0.item == 0 }
-        cell.isLastInSection = { [unowned collectionView] in
-          let numberOfItems = collectionView.numberOfItems(inSection: $0.section)
-          return $0.item == numberOfItems - 1
-        }
-        return cell
-      default: return nil
+    let footerRegistration = FooterSupplementaryRegistration(
+      elementKind: TKCollectionSupplementaryItem.footer.kind,
+      handler: { supplementaryView, elementKind, indexPath in
+        supplementaryView.setContentView(footerViewProvider?())
       }
-    })
-    super.init()
-    setupCollectionView()
+    )
+    self.footerRegistration = footerRegistration
     
-    self.dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
-      switch TKCollectionLayout.SupplementaryItem(rawValue: elementKind) {
+    super.init()
+    
+    collectionView.delegate = self
+    collectionView.addGestureRecognizer(reorderGesture)
+    
+    self.dataSource = DataSource(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+      let cell = self?.cellProvider(collectionView, indexPath, itemIdentifier)
+      cell?.isFirstInSection = { $0.item == 0 }
+      cell?.isLastInSection = { [unowned collectionView] in
+        let numberOfItems = collectionView.numberOfItems(inSection: $0.section)
+        return $0.item == numberOfItems - 1
+      }
+      return cell
+    })
+    
+    self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+      switch TKCollectionSupplementaryItem(rawValue: kind) {
       case .header:
-        return collectionView.dequeueConfiguredReusableSupplementary(
-          using: headerRegistration,
-          for: indexPath
-        )
+        return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
       case .footer:
-        return collectionView.dequeueConfiguredReusableSupplementary(
-          using: footerRegistration,
-          for: indexPath
-        )
-      case .none:
+        return collectionView.dequeueConfiguredReusableSupplementary(using: footerRegistration, for: indexPath)
+      default:
         return nil
       }
     }
-  }
-  
-  public func setSections(_ sections: [TKCollectionSection], animated: Bool) {
-    var snapshot = dataSource.snapshot()
-    snapshot.deleteAllItems()
     
-    sections.forEach { section in
-      snapshot.appendSections([section])
-      switch section {
-      case .list(let items):
-        snapshot.appendItems(items, toSection: section)
-      }
-    }
-    dataSource.apply(snapshot, animatingDifferences: animated)
-  }
-}
-
-private extension TKCollectionController {
-  func setupCollectionView() {
-    collectionView.delegate = self
-    collectionView.addGestureRecognizer(reorderGesture)
-    setupLayout()
-    
-    dataSource.reorderingHandlers.canReorderItem = { [weak self] item in
-      guard let self = self else { return false }
-      return isReordering
+    self.dataSource.reorderingHandlers.canReorderItem = { [collectionView] item in
+      return collectionView.isEditing
     }
     
-    dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
+    self.dataSource.reorderingHandlers.didReorder = { [weak self] transaction in
       self?.didReorder?(transaction.difference)
     }
   }
   
-  func setupLayout() {
-    collectionView.setCollectionViewLayout(
-      TKCollectionLayout.createLayout(section: { [weak self] sectionIndex -> TKCollectionSection? in
-        guard let self = self else { return nil }
-        
-        if #available(iOS 15.0, *) {
-          guard let section = self.dataSource.sectionIdentifier(for: sectionIndex) else { return nil }
-          return section
-        } else {
-          let snapshot = self.dataSource.snapshot().sectionIdentifiers
-          guard snapshot.count > sectionIndex else { return nil }
-          return snapshot[sectionIndex]
-        }
-      }, sectionPaddingProvider: { [weak self] section in
-        self?.sectionPaddingProvider(section) ?? .zero
-      }),
-      animated: false
-    )
+  public func collectionView(_ collectionView: UICollectionView, 
+                             shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+    return isSelectable?(section, indexPath.item) ?? true
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, 
+                             shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+    return isHighlightable?(section, indexPath.item) ?? true
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, canEditItemAt indexPath: IndexPath) -> Bool {
+    let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+    return isEditable?(section, indexPath.item) ?? true
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+    didSelect?(section, indexPath.item)
   }
   
   @objc
@@ -182,22 +137,5 @@ private extension TKCollectionController {
     default:
       collectionView.cancelInteractiveMovement()
     }
-  }
-}
-
-extension TKCollectionController: UICollectionViewDelegate {
-  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let item = dataSource.itemIdentifier(for: indexPath)
-    item?.tapClosure?()
-  }
-  
-  public func collectionView(_ collectionView: UICollectionView, 
-                             willDisplay cell: UICollectionViewCell,
-                             forItemAt indexPath: IndexPath) {
-    (cell as? TKReorderableCell)?.isReordering = isReordering
-  }
-  
-  public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-    !isReordering
   }
 }

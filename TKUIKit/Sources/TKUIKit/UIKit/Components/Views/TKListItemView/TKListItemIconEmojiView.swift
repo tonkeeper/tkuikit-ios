@@ -1,6 +1,6 @@
 import UIKit
 
-public final class TKListItemIconEmojiContentView: UIView, ConfigurableView, ReusableView {
+public final class TKListItemIconEmojiView: UIView, ConfigurableView, ReusableView {
   
   let emojiLabel = UILabel()
   
@@ -21,11 +21,11 @@ public final class TKListItemIconEmojiContentView: UIView, ConfigurableView, Reu
                                 y: bounds.height/2)
   }
   
-  public override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+  public override func sizeThatFits(_ size: CGSize) -> CGSize {
     CGSize(width: .imageViewSide, height: .imageViewSide)
   }
-
-  public struct Model {
+  
+  public struct Model: Hashable {
     public let emoji: String
     public let backgroundColor: UIColor
     
@@ -42,8 +42,11 @@ public final class TKListItemIconEmojiContentView: UIView, ConfigurableView, Reu
   }
 }
 
-private extension TKListItemIconEmojiContentView {
+private extension TKListItemIconEmojiView {
   func setup() {
+    layer.masksToBounds = true
+    layer.cornerRadius = .imageViewSide/2
+    
     emojiLabel.font = .systemFont(ofSize: 24)
     emojiLabel.textAlignment = .center
     
