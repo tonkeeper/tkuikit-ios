@@ -1,6 +1,6 @@
 import UIKit
 
-open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, UICollectionViewDelegate {
+open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, UICollectionViewDelegate, UIScrollViewDelegate {
   public typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
   
   typealias HeaderSupplementaryRegistration = UICollectionView.SupplementaryRegistration<CollectionViewSupplementaryContainerView>
@@ -11,6 +11,7 @@ open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, 
   public var isEditable: ((_ section: Section, _ index: Int) -> Bool)?
   public var didSelect: ((_ section: Section, _ index: Int) -> Void)?
   public var didReorder: ((CollectionDifference<Item>) -> Void)?
+  public var didScroll: ((UIScrollView) -> Void)?
   
   public var isEditing: Bool {
     get { collectionView.isEditing }
@@ -118,6 +119,10 @@ open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, 
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
     didSelect?(section, indexPath.item)
+  }
+  
+  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    didScroll?(scrollView)
   }
   
   @objc
