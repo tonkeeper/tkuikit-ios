@@ -94,6 +94,31 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-testnet-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var lock: UIImage {
+          .imageWithName("Icons/28/ic-lock-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var messageBubble: UIImage {
+          .imageWithName("Icons/28/ic-message-bubble-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var trashBin: UIImage {
+          .imageWithName("Icons/28/ic-trash-bin-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var star: UIImage {
+          .imageWithName("Icons/28/ic-star-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var telegram: UIImage {
+          .imageWithName("Icons/28/ic-telegram-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        
+        public static var door: UIImage {
+          .imageWithName("Icons/28/ic-door-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size36 {
         public static var delete: UIImage {
