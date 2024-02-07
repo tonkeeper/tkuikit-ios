@@ -16,7 +16,7 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
     }
   }
   
-  public var separatorLeftPadding: CGFloat = 0 {
+  public var separatorLeftPadding: CGFloat = 16 {
     didSet {
       layoutSeparator()
     }

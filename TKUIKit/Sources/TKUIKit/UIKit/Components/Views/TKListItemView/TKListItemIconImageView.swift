@@ -1,14 +1,11 @@
 import UIKit
-import TKCore
-import Kingfisher
 
 public final class TKListItemIconImageView: UIView, ConfigurableView, ReusableView {
   
   private let imageView = UIImageView()
-  private let imageLoader = ImageLoader()
   
   private var size: CGSize = .zero
-  private var imageDownloadTask: DownloadTask?
+  private var imageDownloadTask: ImageDownloadTask?
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -38,7 +35,7 @@ public final class TKListItemIconImageView: UIView, ConfigurableView, ReusableVi
   public struct Model {
     public enum Image {
       case image(UIImage)
-      case asyncImage(URL?)
+      case asyncImage(ImageDownloadTask)
     }
     public let image: Image
     public let tintColor: UIColor
@@ -60,12 +57,9 @@ public final class TKListItemIconImageView: UIView, ConfigurableView, ReusableVi
     switch model.image {
     case .image(let image):
       imageView.image = image
-    case .asyncImage(let url):
-      imageDownloadTask = imageLoader.loadImage(
-        url: url,
-        imageView: imageView,
-        size: model.size,
-        cornerRadius: model.size.width/2)
+    case .asyncImage(let imageDownloadTask):
+      imageDownloadTask.start(imageView: imageView, size: model.size, cornerRadius: model.size.width/2)
+      self.imageDownloadTask = imageDownloadTask
     }
     imageView.tintColor = model.tintColor
     backgroundColor = model.backgroundColor

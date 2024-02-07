@@ -2,6 +2,16 @@ import UIKit
 
 public extension UINavigationController {
   func configureDefaultAppearance() {
+    navigationBar.configureDefaultAppearance()
+  }
+  
+  func configureTransparentAppearance() {
+    navigationBar.configureTransparentAppearance()
+  }
+}
+
+public extension UINavigationBar {
+  func configureDefaultAppearance() {
     
     func createAppearance() -> UINavigationBarAppearance {
       let standartAppearance = UINavigationBarAppearance()
@@ -16,17 +26,17 @@ public extension UINavigationController {
     
     let separatorAppearance = createAppearance()
     separatorAppearance.shadowColor = .Separator.common
-    navigationBar.standardAppearance = separatorAppearance
+    standardAppearance = separatorAppearance
   }
   
   func configureTransparentAppearance() {
     let navigationBarAppearance = UINavigationBarAppearance()
     navigationBarAppearance.configureWithTransparentBackground()
     
-    navigationBar.standardAppearance = navigationBarAppearance
-    navigationBar.compactAppearance = navigationBarAppearance
+    standardAppearance = navigationBarAppearance
+    compactAppearance = navigationBarAppearance
     if #available(iOS 15.0, *) {
-      navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
+      compactScrollEdgeAppearance = navigationBarAppearance
     }
   }
 }

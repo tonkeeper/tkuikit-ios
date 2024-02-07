@@ -2,17 +2,9 @@ import UIKit
 
 public extension UIViewController {
   func setupBackButton() {
-    let backButton = TKUIHeaderIconButton()
-    backButton.configure(
-      model: TKUIHeaderButtonIconContentView.Model(
-        image: .TKUIKit.Icons.Size16.chevronLeft
-      )
-    )
-    backButton.addTapAction { [weak self] in
+    navigationItem.setupBackButton { [weak self] in
       self?.navigationController?.popViewController(animated: true)
     }
-    backButton.tapAreaInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
-    navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
   }
   
   func setupLeftCloseButton(_ action: @escaping () -> Void) {
@@ -37,5 +29,21 @@ public extension UIViewController {
     }
     closeButton.tapAreaInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
     return closeButton
+  }
+}
+
+public extension UINavigationItem {
+  func setupBackButton(action: @escaping () -> Void) {
+    let backButton = TKUIHeaderIconButton()
+    backButton.configure(
+      model: TKUIHeaderButtonIconContentView.Model(
+        image: .TKUIKit.Icons.Size16.chevronLeft
+      )
+    )
+    
+    backButton.addTapAction(action)
+    
+    backButton.tapAreaInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
+    leftBarButtonItem = UIBarButtonItem(customView: backButton)
   }
 }
