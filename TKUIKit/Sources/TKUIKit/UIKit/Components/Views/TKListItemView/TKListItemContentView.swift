@@ -42,7 +42,7 @@ public final class TKListItemContentView: UIView, ReusableView, ConfigurableView
     )
     let leftContentOrigin = CGPoint(x: 0, y: 0)
     let leftContentFrame = CGRect(origin: leftContentOrigin, 
-                                  size: CGSize(width: leftContentSize.width, height: bounds.height))
+                                  size: CGSize(width: bounds.width - rightContentSize.width, height: bounds.height))
 
     leftContentStackView.frame = leftContentFrame
     rightContentStackView.frame = rightContentFrame

@@ -52,7 +52,10 @@ public struct TKListItemLayout {
         ),
         size: valueViewSize
       )
-      estimatedWidth -= valueViewSize.width + .valueViewLeftInset
+      estimatedWidth -= valueViewSize.width
+      if valueViewSize.width > 0 {
+        estimatedWidth -= .valueViewLeftInset
+      }
     }
     
     let contentViewSize = CGSize(width: estimatedWidth, height: bounds.height)
