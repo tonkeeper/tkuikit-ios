@@ -28,22 +28,39 @@ public final class TKListItemContentView: UIView, ReusableView, ConfigurableView
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let rightContentSize = rightContentStackView.sizeThatFits(bounds.size)
+    let rightContentSize = rightContentStackView.sizeThatFits(
+      bounds.size
+    )
     let rightContentOrigin = CGPoint(
-      x: bounds.width - rightContentSize.width, 
+      x: bounds.width - rightContentSize.width,
       y: 0
     )
-    let rightContentFrame = CGRect(origin: rightContentOrigin, 
-                                   size: CGSize(width: rightContentSize.width, height: bounds.height))
-
-    let leftContentSize = leftContentStackView.sizeThatFits(
-      CGSize(width: bounds.width - rightContentSize.width,
-             height: bounds.height)
+    let rightContentFrame = CGRect(
+      origin: rightContentOrigin,
+      size: CGSize(
+        width: rightContentSize.width,
+        height: bounds.height
+      )
     )
-    let leftContentOrigin = CGPoint(x: 0, y: 0)
-    let leftContentFrame = CGRect(origin: leftContentOrigin, 
-                                  size: CGSize(width: bounds.width - rightContentSize.width, height: bounds.height))
-
+    
+    let leftContentSize = leftContentStackView.sizeThatFits(
+      CGSize(
+        width: bounds.width - rightContentSize.width,
+        height: bounds.height
+      )
+    )
+    let leftContentOrigin = CGPoint(
+      x: 0,
+      y: 0
+    )
+    let leftContentFrame = CGRect(
+      origin: leftContentOrigin,
+      size: CGSize(
+        width: bounds.width - rightContentSize.width,
+        height: leftContentSize.height
+      )
+    )
+    
     leftContentStackView.frame = leftContentFrame
     rightContentStackView.frame = rightContentFrame
   }
