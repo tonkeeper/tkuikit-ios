@@ -96,7 +96,6 @@ public final class TKLoaderView: UIView {
   }
   
   func startAnimation() {
-    stopAnimation()
     isAnimating = true
     topCircleLayer.add(rotationAnimation, forKey: nil)
   }
