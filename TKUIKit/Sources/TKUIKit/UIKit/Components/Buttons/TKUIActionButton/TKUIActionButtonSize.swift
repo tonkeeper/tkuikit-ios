@@ -5,7 +5,7 @@ public enum TKUIActionButtonSize {
   case medium
   case large
   
-  var height: CGFloat {
+  public var height: CGFloat {
     switch self {
     case .small: return 36
     case .medium: return 48
@@ -13,7 +13,7 @@ public enum TKUIActionButtonSize {
     }
   }
   
-  var cornerRadius: CGFloat {
+  public var cornerRadius: CGFloat {
     switch self {
     case .small: return 18
     case .medium: return 24
@@ -21,7 +21,7 @@ public enum TKUIActionButtonSize {
     }
   }
   
-  var padding: UIEdgeInsets {
+  public var padding: UIEdgeInsets {
     switch self {
     case .small: return .init(top: 8, left: 16, bottom: 8, right: 16)
     case .medium: return .init(top: 11, left: 20, bottom: 13, right: 20)
@@ -29,7 +29,7 @@ public enum TKUIActionButtonSize {
     }
   }
   
-  var textStyle: TKTextStyle {
+  public var textStyle: TKTextStyle {
     switch self {
     case .small: return .label2
     case .medium: return .label1

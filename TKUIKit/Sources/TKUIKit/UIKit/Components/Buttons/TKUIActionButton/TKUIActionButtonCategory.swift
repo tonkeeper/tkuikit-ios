@@ -5,35 +5,35 @@ public enum TKUIActionButtonCategory {
   case secondary
   case tertiary
   
-  var titleColor: UIColor {
+  public var titleColor: UIColor {
     switch self {
     case .primary: return UIColor.Button.primaryForeground
     case .secondary: return UIColor.Button.secondaryForeground
     case .tertiary: return UIColor.Button.tertiaryForeground
     }
   }
-  var backgroundColor: UIColor {
+  public var backgroundColor: UIColor {
     switch self {
     case .primary: return UIColor.Button.primaryBackground
     case .secondary: return UIColor.Button.secondaryBackground
     case .tertiary: return UIColor.Button.tertiaryBackground
     }
   }
-  var highlightedBackgroundColor: UIColor {
+  public var highlightedBackgroundColor: UIColor {
     switch self {
     case .primary: return UIColor.Button.primaryBackgroundHighlighted
     case .secondary: return UIColor.Button.secondaryBackgroundHighlighted
     case .tertiary: return UIColor.Button.tertiaryBackgroundHighlighted
     }
   }
-  var disabledTitleColor: UIColor {
+  public var disabledTitleColor: UIColor {
     switch self {
     case .primary: return UIColor.Button.primaryForeground.withAlphaComponent(0.48)
     case .secondary: return UIColor.Button.secondaryForeground.withAlphaComponent(0.48)
     case .tertiary: return UIColor.Button.tertiaryForeground.withAlphaComponent(0.48)
     }
   }
-  var disabledBackgroundColor: UIColor {
+  public var disabledBackgroundColor: UIColor {
     switch self {
     case .primary: return UIColor.Button.primaryBackgroundDisabled
     case .secondary: return UIColor.Button.secondaryBackgroundDisabled
