@@ -73,7 +73,7 @@ private extension TKListItemContentStackView {
   }
 }
 
-extension UILabel {
+public extension UILabel {
   func tkSizeThatFits(_ size: CGSize) -> CGSize {
     let sizeThatFits = sizeThatFits(size)
     return CGSize(width: min(sizeThatFits.width, size.width), height: sizeThatFits.height)
