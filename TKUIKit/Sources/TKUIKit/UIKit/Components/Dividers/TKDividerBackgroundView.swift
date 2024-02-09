@@ -1,13 +1,15 @@
 import UIKit
 
 public final class TKDividerBackgroundView: UIView {
+  public var numberOfRows = 0 {
+    didSet {
+      didUpdateNumberOfRows()
+    }
+  }
   
-  public var numberOfRows: (() -> Int)?
-  public var numberOfItems: ((Int) -> Int)?
-  
-  private let horizontalDivider = TKHorizontalDividerView()
   private let leftVerticalDivider = TKVerticalDividerView()
   private let rightVerticalDivider = TKVerticalDividerView()
+  private var horizontalDividers = [TKHorizontalDividerView]()
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -20,12 +22,12 @@ public final class TKDividerBackgroundView: UIView {
   
   public override func layoutSubviews() {
     super.layoutSubviews()
-    
-    horizontalDivider.frame = CGRect(
-      x: 0,
-      y: bounds.height/2 - 0.5/2,
-      width: bounds.width,
-      height: 0.5)
+
+    horizontalDividers.forEach { divider in
+      let frame = CGRect(origin: CGPoint(x: 0, y: bounds.height/CGFloat(horizontalDividers.count + 1) / 0.5/2),
+                         size: CGSize(width: bounds.width, height: 0.5))
+      divider.frame = frame
+    }
     
     let sectionWidth = bounds.width/3
     leftVerticalDivider.frame = CGRect(
@@ -45,9 +47,16 @@ public final class TKDividerBackgroundView: UIView {
 
 private extension TKDividerBackgroundView {
   func setup() {
-    addSubview(horizontalDivider)
     addSubview(leftVerticalDivider)
     addSubview(rightVerticalDivider)
+  }
+  
+  func didUpdateNumberOfRows() {
+    self.horizontalDividers.forEach { $0.removeFromSuperview() }
+    let horizontalDividers = (1..<numberOfRows).map { _ in TKHorizontalDividerView() }
+    horizontalDividers.forEach { addSubview($0) }
+    self.horizontalDividers = horizontalDividers
+    setNeedsLayout()
   }
 }
 

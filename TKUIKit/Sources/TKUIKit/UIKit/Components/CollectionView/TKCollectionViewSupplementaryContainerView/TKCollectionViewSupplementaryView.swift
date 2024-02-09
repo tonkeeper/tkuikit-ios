@@ -6,7 +6,7 @@ public protocol TKCollectionViewSupplementaryContainerViewContentView: Configura
 
 public class TKCollectionViewSupplementaryContainerView<ContentView: TKCollectionViewSupplementaryContainerViewContentView>: UICollectionReusableView, ConfigurableView, ReusableView {
 
-  let contentView = ContentView()
+  public let contentView = ContentView()
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
