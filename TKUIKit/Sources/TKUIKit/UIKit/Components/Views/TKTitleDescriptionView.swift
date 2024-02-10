@@ -28,6 +28,7 @@ public final class TKTitleDescriptionView: UIView, ConfigurableView {
       stackViewLeftAnchor?.constant = padding.leading
       stackViewBottomAnchor?.constant = -padding.bottom
       stackViewRightAnchor?.constant = -padding.trailing
+      stackViewWidthAnchor?.constant = -(padding.leading + padding.trailing)
     }
   }
   
@@ -43,6 +44,7 @@ public final class TKTitleDescriptionView: UIView, ConfigurableView {
   private var stackViewLeftAnchor: NSLayoutConstraint?
   private var stackViewBottomAnchor: NSLayoutConstraint?
   private var stackViewRightAnchor: NSLayoutConstraint?
+  private var stackViewWidthAnchor: NSLayoutConstraint?
 
   public init(size: Size) {
     self.size = size
@@ -115,11 +117,13 @@ private extension TKTitleDescriptionView {
       .withPriority(.defaultHigh)
     stackViewBottomAnchor = stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
       .withPriority(.defaultHigh)
+    stackViewWidthAnchor = stackView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor)
 
     stackViewTopAnchor?.isActive = true
     stackViewLeftAnchor?.isActive = true
     stackViewRightAnchor?.isActive = true
     stackViewBottomAnchor?.isActive = true
+    stackViewWidthAnchor?.isActive = true
   }
   
   func didUpdateSize() {

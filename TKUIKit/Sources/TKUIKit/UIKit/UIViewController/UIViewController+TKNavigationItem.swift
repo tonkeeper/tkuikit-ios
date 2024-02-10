@@ -7,6 +7,12 @@ public extension UIViewController {
     }
   }
   
+  func setupSwipeDownButton() {
+    navigationItem.setupSwipeDown { [weak self] in
+      self?.dismiss(animated: true)
+    }
+  }
+  
   func setupLeftCloseButton(_ action: @escaping () -> Void) {
     let closeButton = createCloseButton(action)
     navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
@@ -38,6 +44,20 @@ public extension UINavigationItem {
     backButton.configure(
       model: TKUIHeaderButtonIconContentView.Model(
         image: .TKUIKit.Icons.Size16.chevronLeft
+      )
+    )
+    
+    backButton.addTapAction(action)
+    
+    backButton.tapAreaInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)
+    leftBarButtonItem = UIBarButtonItem(customView: backButton)
+  }
+  
+  func setupSwipeDown(action: @escaping () -> Void) {
+    let backButton = TKUIHeaderIconButton()
+    backButton.configure(
+      model: TKUIHeaderButtonIconContentView.Model(
+        image: .TKUIKit.Icons.Size16.chevronDown
       )
     )
     
