@@ -28,6 +28,14 @@ public extension UIImage {
           .imageWithName("Icons/16/ic-done-bold-16")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var copy: UIImage {
+          .imageWithName("Icons/16/ic-copy-16")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var share: UIImage {
+          .imageWithName("Icons/16/ic-share-16")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size28 {
         public static var qrViewFinder: UIImage {
