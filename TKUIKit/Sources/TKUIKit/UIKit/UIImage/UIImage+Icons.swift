@@ -128,6 +128,16 @@ public extension UIImage {
           .withRenderingMode(.alwaysTemplate)
         }
       }
+      public enum Size32 {
+        public static var checkmarkCircle: UIImage {
+          .imageWithName("ic-checkmark-circle-32")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var exclamationmarkCircle: UIImage {
+          .imageWithName("ic-exclamationmark-circle-32")
+          .withRenderingMode(.alwaysTemplate)
+        }
+      }
       public enum Size36 {
         public static var delete: UIImage {
           .imageWithName("Icons/36/ic-delete-36")
