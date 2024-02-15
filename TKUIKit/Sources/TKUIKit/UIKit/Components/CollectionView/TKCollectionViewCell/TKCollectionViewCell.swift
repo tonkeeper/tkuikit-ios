@@ -90,7 +90,7 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
     
     editingAccessoryView.alpha = state.isEditing ? 1 : 0
     selectionAccessoryView.alpha = state.isSelected && isSelectable ? 1 : 0
-    accessoryView.alpha = !state.isEditing && !state.isSelected && accessoryType != .none ? 1 : 0
+    accessoryView.alpha = !state.isEditing && !(state.isSelected && isSelectable) && accessoryType != .none ? 1 : 0
     
     layoutContentContainer()
   }
@@ -102,7 +102,6 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
     highlightView.alpha = 0
     
     setupAccessoryView()
-    
     contentView.addSubview(highlightView)
     contentView.addSubview(separatorView)
     contentView.addSubview(contentContainer)

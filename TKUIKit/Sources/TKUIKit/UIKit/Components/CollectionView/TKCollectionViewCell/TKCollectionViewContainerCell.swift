@@ -27,17 +27,20 @@ open class TKCollectionViewContainerCell<CellContentView: TKCollectionViewCellCo
     public let identifier: String
     public let isHighlightable: Bool
     public let isSelectable: Bool
+    public let accessoryType: AccessoryType
     public let selectionHandler: (() -> Void)?
     public let cellContentModel: CellContentView.Model
     
     public init(identifier: String, 
                 isHighlightable: Bool = true,
                 isSelectable: Bool = false,
+                accessoryType: AccessoryType = .none,
                 selectionHandler: (() -> Void)? = nil,
                 cellContentModel: CellContentView.Model) {
       self.identifier = identifier
       self.isHighlightable = isHighlightable
       self.isSelectable = isSelectable
+      self.accessoryType = accessoryType
       self.selectionHandler = selectionHandler
       self.cellContentModel = cellContentModel
     }
@@ -54,6 +57,7 @@ open class TKCollectionViewContainerCell<CellContentView: TKCollectionViewCellCo
   public func configure(model: Model) {
     cellContentView.configure(model: model.cellContentModel)
     self.isSelectable = model.isSelectable
+    self.accessoryType = model.accessoryType
     setNeedsLayout()
   }
   
