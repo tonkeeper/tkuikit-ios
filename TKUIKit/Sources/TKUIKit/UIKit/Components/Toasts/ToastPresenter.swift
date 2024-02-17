@@ -124,6 +124,7 @@ public final class ToastPresenter {
                    delay: 0,
                    options: .curveEaseInOut,
                    animations: {
+      toastView.alpha = 0
       toastWindow.layoutIfNeeded()
     }, completion: { _ in
       completion()
@@ -141,6 +142,7 @@ public final class ToastPresenter {
     isPresenting = true
     
     let toastView = ToastView(model: model)
+    toastView.alpha = 0
     self.toastView = toastView
     toastWindow.addSubview(toastView)
     toastView.translatesAutoresizingMaskIntoConstraints = false
@@ -160,6 +162,7 @@ public final class ToastPresenter {
                    delay: 0,
                    options: .curveEaseInOut,
                    animations: {
+      toastView.alpha = 1
       toastWindow.layoutIfNeeded()
     }, completion: { _ in
       completion?()
