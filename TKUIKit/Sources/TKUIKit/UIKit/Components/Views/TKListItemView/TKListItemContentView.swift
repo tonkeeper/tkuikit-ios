@@ -43,12 +43,6 @@ public final class TKListItemContentView: UIView, ReusableView, ConfigurableView
       )
     )
     
-    let leftContentSize = leftContentStackView.sizeThatFits(
-      CGSize(
-        width: bounds.width - rightContentSize.width,
-        height: bounds.height
-      )
-    )
     let leftContentOrigin = CGPoint(
       x: 0,
       y: 0
@@ -57,7 +51,7 @@ public final class TKListItemContentView: UIView, ReusableView, ConfigurableView
       origin: leftContentOrigin,
       size: CGSize(
         width: bounds.width - rightContentSize.width,
-        height: leftContentSize.height
+        height: bounds.height
       )
     )
     
