@@ -10,6 +10,7 @@ public final class TKHighlightView: UIView {
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
+    isUserInteractionEnabled = false
     backgroundColor = .clear
   }
   
