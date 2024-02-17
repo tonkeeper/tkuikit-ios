@@ -5,6 +5,7 @@ public final class TKTextInputFieldTextFieldInputControl: UIView, TKTextInputFie
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
   public var shouldPaste: ((String) -> Bool)?
+  public var shouldReturn: (() -> Bool)?
   public var text: String {
     get {
       textField.text ?? ""
@@ -71,6 +72,7 @@ private extension TKTextInputFieldTextFieldInputControl {
     textField.addTarget(self, action: #selector(textFieldDidBeginEditing), for: .editingDidBegin)
     textField.addTarget(self, action: #selector(textFieldDidEndEditing), for: .editingDidEnd)
     textField.pasteDelegate = self
+    textField.delegate = self
     
     addSubview(textField)
     
@@ -101,6 +103,12 @@ private extension TKTextInputFieldTextFieldInputControl {
   @objc
   func textFieldDidEndEditing() {
     didEndEditing?()
+  }
+}
+
+extension TKTextInputFieldTextFieldInputControl: UITextFieldDelegate {
+  public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    shouldReturn?() ?? true
   }
 }
 

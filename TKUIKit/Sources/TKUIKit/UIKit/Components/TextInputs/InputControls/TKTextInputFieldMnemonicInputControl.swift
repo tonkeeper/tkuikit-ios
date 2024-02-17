@@ -8,6 +8,7 @@ public final class TKTextInputFieldMnemonicInputControl: UIView, TKTextInputFiel
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
   public var shouldPaste: ((String) -> Bool)?
+  public var shouldReturn: (() -> Bool)?
   public var text: String {
     get {
       inputControl.text
@@ -89,6 +90,9 @@ private extension TKTextInputFieldMnemonicInputControl {
     }
     inputControl.shouldPaste = { [weak self] text in
       return (self?.shouldPaste?(text) ?? true)
+    }
+    inputControl.shouldReturn = { [weak self] in
+      return (self?.shouldReturn?() ?? true)
     }
   }
   

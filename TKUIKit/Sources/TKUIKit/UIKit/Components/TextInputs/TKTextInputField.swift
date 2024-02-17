@@ -5,6 +5,7 @@ public protocol TKTextInputFieldInputControl: UIView {
   var didBeginEditing: (() -> Void)? { get set }
   var didEndEditing: (() -> Void)? { get set }
   var shouldPaste: ((String) -> Bool)? { get set }
+  var shouldReturn: (() -> Bool)? { get set }
   
   var text: String { get set }
   
@@ -29,6 +30,7 @@ open class TKTextInputField<InputControl: TKTextInputFieldInputControl>: UIView,
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
   public var shouldPaste: ((String) -> Bool)?
+  public var shouldReturn: (() -> Bool)?
   public var text: String {
     get {
       inputControl.text
@@ -108,6 +110,9 @@ private extension TKTextInputField {
     }
     inputControl.shouldPaste = { [weak self] text in
       return (self?.shouldPaste?(text) ?? true)
+    }
+    inputControl.shouldReturn = { [weak self] in
+      return (self?.shouldReturn?() ?? true)
     }
   }
   

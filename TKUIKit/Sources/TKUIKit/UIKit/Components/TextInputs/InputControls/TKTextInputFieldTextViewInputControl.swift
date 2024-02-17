@@ -40,6 +40,7 @@ public final class TKTextInputFieldTextViewInputControl: UIView, TKTextInputFiel
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
   public var shouldPaste: ((String) -> Bool)?
+  public var shouldReturn: (() -> Bool)?
   
   public var text: String {
     get {
