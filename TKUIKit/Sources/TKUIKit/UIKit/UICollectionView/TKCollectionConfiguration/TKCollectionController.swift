@@ -21,6 +21,8 @@ open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, 
     }
   }
   
+  public var supplementaryViewProvider: ((UICollectionView, String, IndexPath) -> UICollectionReusableView?)?
+  
   private lazy var reorderGesture: UILongPressGestureRecognizer = {
     let gesture = UILongPressGestureRecognizer(
       target: self,
@@ -30,18 +32,18 @@ open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, 
     return gesture
   }()
   
-  public var dataSource: DataSource!
+  public let dataSource: DataSource
   
   private let headerRegistration: HeaderSupplementaryRegistration
   private let footerRegistration: HeaderSupplementaryRegistration
   
   private let collectionView: UICollectionView
-  private let cellProvider: (UICollectionView, IndexPath, Item) -> TKCollectionViewCell?
+  private let cellProvider: (UICollectionView, IndexPath, Item) -> UICollectionViewCell?
   private let headerViewProvider: (() -> UIView)?
   private let footerViewProvider: (() -> UIView)?
   
   public init(collectionView: UICollectionView,
-              cellProvider: @escaping (UICollectionView, IndexPath, Item) -> TKCollectionViewCell?,
+              cellProvider: @escaping (UICollectionView, IndexPath, Item) -> UICollectionViewCell?,
               headerViewProvider: (() -> UIView)? = nil,
               footerViewProvider: (() -> UIView)? = nil) {
     self.collectionView = collectionView
@@ -64,29 +66,29 @@ open class TKCollectionController<Section: Hashable, Item: Hashable>: NSObject, 
     )
     self.footerRegistration = footerRegistration
     
-    super.init()
-    
-    collectionView.delegate = self
-    collectionView.addGestureRecognizer(reorderGesture)
-    
-    self.dataSource = DataSource(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
-      let cell = self?.cellProvider(collectionView, indexPath, itemIdentifier)
-      cell?.isFirstInSection = { $0.item == 0 }
-      cell?.isLastInSection = { [unowned collectionView] in
+    self.dataSource = DataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+      let cell = cellProvider(collectionView, indexPath, itemIdentifier)
+      (cell as? TKCollectionViewCell)?.isFirstInSection = { $0.item == 0 }
+      (cell as? TKCollectionViewCell)?.isLastInSection = { [unowned collectionView] in
         let numberOfItems = collectionView.numberOfItems(inSection: $0.section)
         return $0.item == numberOfItems - 1
       }
       return cell
     })
     
-    self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+    super.init()
+    
+    collectionView.delegate = self
+    collectionView.addGestureRecognizer(reorderGesture)
+    
+    self.dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
       switch TKCollectionSupplementaryItem(rawValue: kind) {
       case .header:
         return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
       case .footer:
         return collectionView.dequeueConfiguredReusableSupplementary(using: footerRegistration, for: indexPath)
       default:
-        return nil
+        return self?.supplementaryViewProvider?(collectionView, kind, indexPath)
       }
     }
     
