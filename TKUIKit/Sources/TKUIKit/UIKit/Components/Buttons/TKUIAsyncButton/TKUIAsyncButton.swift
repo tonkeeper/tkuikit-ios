@@ -1,6 +1,7 @@
 import UIKit
 
 public protocol TKUIAsyncButtonContentView: UIView, ConfigurableView {
+  var isEnabled: Bool { get set }
   var loaderSize: TKLoaderView.Size { get }
   var contentView: UIView { get }
   
@@ -8,6 +9,16 @@ public protocol TKUIAsyncButtonContentView: UIView, ConfigurableView {
 }
 
 public final class TKUIAsyncButton<Content: TKUIAsyncButtonContentView>: UIView, ConfigurableView {
+  
+  public var isEnabled: Bool {
+    get {
+      content.isEnabled
+    }
+    set {
+      content.isEnabled = newValue
+    }
+  }
+  
   private let content: Content
   private let loaderView: TKLoaderView
   private var isPerformingTask = false {
