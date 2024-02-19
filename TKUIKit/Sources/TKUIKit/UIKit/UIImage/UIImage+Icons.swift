@@ -122,9 +122,12 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-telegram-28")
           .withRenderingMode(.alwaysTemplate)
         }
-        
         public static var door: UIImage {
           .imageWithName("Icons/28/ic-door-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
+        public static var faceId: UIImage {
+          .imageWithName("Icons/28/ic-faceid-28")
           .withRenderingMode(.alwaysTemplate)
         }
       }
