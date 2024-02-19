@@ -48,7 +48,7 @@ public struct TKListItemLayout {
       valueView.frame = CGRect(
         origin: CGPoint(
           x: bounds.width - valueViewSize.width,
-          y: 0
+          y: bounds.height/2 - valueViewSize.height/2
         ),
         size: valueViewSize
       )

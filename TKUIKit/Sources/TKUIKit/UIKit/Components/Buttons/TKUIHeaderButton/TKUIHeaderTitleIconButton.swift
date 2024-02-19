@@ -10,7 +10,7 @@ public final class TKUIHeaderTitleIconButton: TKUIButton<TKUIButtonTitleIconCont
   }
   
   public override var intrinsicContentSize: CGSize {
-    CGSize(width: UIView.noIntrinsicMetric, height: 32 + padding.top + padding.bottom)
+    CGSize(width: contentView.intrinsicContentSize.width + padding.left + padding.right, height: 32 + padding.top + padding.bottom)
   }
   
   public override func setupButtonState() {

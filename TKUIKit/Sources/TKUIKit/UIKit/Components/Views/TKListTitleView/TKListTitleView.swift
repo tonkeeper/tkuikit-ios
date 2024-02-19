@@ -2,11 +2,15 @@ import UIKit
 
 public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupplementaryContainerViewContentView {
   
+  public var didTapButton: (() -> Void)?
+  
   public struct Model: Hashable {
     public let title: String?
+    public let buttonModel: TKButton.Model?
     
-    public init(title: String?) {
+    public init(title: String?, buttonModel: TKButton.Model? = nil) {
       self.title = title
+      self.buttonModel = buttonModel
     }
   }
   
@@ -16,6 +20,14 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
     label.textColor = .Text.primary
     label.textAlignment = .left
     return label
+  }()
+  
+  private let button = TKHeaderButton()
+  private let stackView: UIStackView = {
+    let stackView = UIStackView()
+    stackView.axis = .horizontal
+    stackView.alignment = .center
+    return stackView
   }()
   
   public override init(frame: CGRect) {
@@ -41,22 +53,37 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
   
   public func configure(model: Model) {
     titleLabel.text = model.title
+    if let buttonModel = model.buttonModel {
+      button.configure(model: buttonModel)
+      button.isHidden = false
+    } else {
+      button.isHidden = true
+    }
   }
 }
 
 private extension TKListTitleView {
   func setup() {
-    addSubview(titleLabel)
+    
+    button.setTapAction { [weak self] in
+      self?.didTapButton?()
+    }
+    
+    addSubview(stackView)
+    stackView.addArrangedSubview(titleLabel)
+    stackView.addArrangedSubview(button)
     backgroundColor = .Background.page
     
     titleLabel.backgroundColor = .Background.page
     
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    button.setContentHuggingPriority(.required, for: .horizontal)
+    
+    stackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      titleLabel.topAnchor.constraint(equalTo: topAnchor),
-      titleLabel.leftAnchor.constraint(equalTo: leftAnchor),
-      titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-      titleLabel.rightAnchor.constraint(equalTo: rightAnchor)
+      stackView.topAnchor.constraint(equalTo: topAnchor),
+      stackView.leftAnchor.constraint(equalTo: leftAnchor),
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+      stackView.rightAnchor.constraint(equalTo: rightAnchor)
     ])
   }
 }
