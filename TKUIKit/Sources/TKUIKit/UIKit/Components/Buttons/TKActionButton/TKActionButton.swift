@@ -2,12 +2,12 @@ import UIKit
 
 open class TKActionButton: TKButton {
   
-  var category: TKUIActionButtonCategory {
+  public var category: TKUIActionButtonCategory {
     didSet {
       didUpdateCategory()
     }
   }
-  var size: TKUIActionButtonSize {
+  public var size: TKUIActionButtonSize {
     didSet {
       didUpdateSize()
     }

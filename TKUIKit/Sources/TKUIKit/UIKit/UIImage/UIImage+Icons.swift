@@ -155,6 +155,12 @@ public extension UIImage {
           .withRenderingMode(.alwaysTemplate)
         }
       }
+      public enum Size84 {
+        public static var camera: UIImage {
+          .imageWithName("Icons/84/ic-camera-84")
+          .withRenderingMode(.alwaysTemplate)
+        }
+      }
     }
   }
 }

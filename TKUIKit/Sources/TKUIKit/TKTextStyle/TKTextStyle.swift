@@ -13,6 +13,10 @@ public struct TKTextStyle {
     (lineHeight - font.lineHeight) / 2.0 / adjustment
   }
   
+  public var lineSpacing: CGFloat {
+    return lineHeight - font.lineHeight
+  }
+  
   init(font: UIFont,
        lineHeight: CGFloat,
        uppercased: Bool = false) {
