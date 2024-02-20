@@ -1,9 +1,17 @@
 import UIKit
 
 public final class TKNavigationController: UINavigationController {
+  
+  public var interactivePopGestureEnabled = true {
+    didSet {
+      interactivePopGestureRecognizer?.isEnabled = interactivePopGestureEnabled
+    }
+  }
+  
   public override func viewDidLoad() {
     super.viewDidLoad()
     interactivePopGestureRecognizer?.delegate = self
+    interactivePopGestureRecognizer?.isEnabled = interactivePopGestureEnabled
   }
 }
 

@@ -1,6 +1,6 @@
 import UIKit
 
-final class TKActionButton: TKButton {
+open class TKActionButton: TKButton {
   
   var category: TKUIActionButtonCategory {
     didSet {
@@ -13,19 +13,19 @@ final class TKActionButton: TKButton {
     }
   }
   
-  init(category: TKUIActionButtonCategory, 
-       size: TKUIActionButtonSize) {
+  public init(category: TKUIActionButtonCategory, 
+              size: TKUIActionButtonSize) {
     self.category = category
     self.size = size
     super.init(frame: .zero)
     setup()
   }
   
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override var intrinsicContentSize: CGSize {
+  public override var intrinsicContentSize: CGSize {
     CGSize(width: UIView.noIntrinsicMetric, height: size.height)
   }
 }

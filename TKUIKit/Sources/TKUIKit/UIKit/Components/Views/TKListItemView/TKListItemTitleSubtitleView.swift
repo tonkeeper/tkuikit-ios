@@ -65,8 +65,7 @@ public final class TKListItemTitleSubtitleView: UIView, ReusableView {
 
 private extension TKListItemTitleSubtitleView {
   func setup() {
-//    titleLabel.contentMode = /*.right*/
-    titleLabel.numberOfLines = 0
+    titleLabel.numberOfLines = 1
     addSubview(titleLabel)
     addSubview(subtitleLabel)
   }

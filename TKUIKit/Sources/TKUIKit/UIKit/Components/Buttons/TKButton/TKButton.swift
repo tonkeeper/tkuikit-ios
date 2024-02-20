@@ -1,6 +1,6 @@
 import UIKit
 
-public class TKButton: UIControl, ConfigurableView {
+open class TKButton: UIControl, ConfigurableView {
   
   public enum State {
     case normal
@@ -80,7 +80,7 @@ public class TKButton: UIControl, ConfigurableView {
     setup()
   }
   
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
@@ -136,11 +136,19 @@ public class TKButton: UIControl, ConfigurableView {
       action()
     }), for: .touchUpInside)
   }
+  
+  public override func setContentHuggingPriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+    super.setContentHuggingPriority(priority, for: axis)
+    contentStackView.setContentHuggingPriority(.required, for: .horizontal)
+    titleLabel.setContentHuggingPriority(.required, for: .horizontal)
+  }
 }
 
 private extension TKButton {
   func setup() {
     contentStackView.isUserInteractionEnabled = false
+    
+    titleLabel.textAlignment = .center
     
     addSubview(contentStackView)
     
@@ -153,10 +161,6 @@ private extension TKButton {
   }
   
   func setupConstraints() {
-    setContentHuggingPriority(.required, for: .horizontal)
-    contentStackView.setContentHuggingPriority(.required, for: .horizontal)
-    titleLabel.setContentHuggingPriority(.required, for: .horizontal)
-    
     contentStackView.translatesAutoresizingMaskIntoConstraints = false
     
     NSLayoutConstraint.activate([
