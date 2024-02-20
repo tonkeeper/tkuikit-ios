@@ -19,6 +19,15 @@ public final class TKNavigationBar: UIView {
     }
   }
   
+  public var isConnecting: Bool {
+    get {
+      largeTitleView.isLoading
+    }
+    set {
+      largeTitleView.isLoading = newValue
+    }
+  }
+  
   private var isLarge = true
   
   let backgroundView: UIView = {

@@ -33,6 +33,8 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
       setupAccessoryView()
     }
   }
+  
+  public var isSeparatorEnabled: Bool = true
     
   // MARK: - Subviews
   
@@ -116,7 +118,7 @@ extension TKCollectionViewCell {
   // MARK: - Setup
   
   func setupSeparator() {
-    let isHidden = !isSeparatorVisible || configurationState.isHighlighted
+    let isHidden = !isSeparatorVisible || configurationState.isHighlighted || !isSeparatorEnabled
     separatorView.isHidden = isHidden
   }
   
@@ -125,7 +127,7 @@ extension TKCollectionViewCell {
   func layoutSeparator() {
     let separatorViewFrame = CGRect(x: separatorLeftPadding,
                                     y: bounds.height - .separatorhHeight,
-                                    width: bounds.width + separatorLeftPadding,
+                                    width: bounds.width - separatorLeftPadding,
                                     height: .separatorhHeight)
     separatorView.frame = separatorViewFrame
   }
