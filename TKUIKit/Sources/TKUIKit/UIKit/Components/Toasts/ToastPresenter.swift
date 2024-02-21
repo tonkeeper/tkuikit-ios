@@ -179,7 +179,7 @@ private extension TimeInterval {
   static let defaultPresentationDuration: TimeInterval = 2.0
 }
 
-extension UIApplication {
+public extension UIApplication {
   static var keyWindow: UIWindow? {
     self
       .shared

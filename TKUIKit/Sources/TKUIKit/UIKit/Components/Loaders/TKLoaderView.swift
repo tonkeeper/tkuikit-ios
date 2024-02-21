@@ -31,7 +31,6 @@ public final class TKLoaderView: UIView {
     animation.toValue = CGFloat(Double.pi * 2.0)
     animation.duration = 1.0
     animation.repeatCount = Float.infinity
-    animation.isRemovedOnCompletion = false
     return animation
   }()
   
@@ -47,6 +46,21 @@ public final class TKLoaderView: UIView {
     self.style = style
     super.init(frame: .zero)
     setup()
+    
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(willEnterForeground),
+      name: UIApplication.willEnterForegroundNotification,
+      object: nil
+    )
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(
+      self,
+      name: UIApplication.willEnterForegroundNotification,
+      object: nil
+    )
   }
   
   required init?(coder: NSCoder) {
@@ -83,34 +97,25 @@ public final class TKLoaderView: UIView {
     topCircleLayer.path = path.cgPath
     CATransaction.commit()
   }
-  
+
   public override func didMoveToWindow() {
     super.didMoveToWindow()
-    guard window != nil else {
-      NotificationCenter.default.removeObserver(
-        self,
-        name: UIApplication.willEnterForegroundNotification,
-        object: nil
-      )
-      return
+    if window == nil {
+      stopAnimation()
+    } else {
+      startAnimation()
     }
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(willEnterForeground),
-      name: UIApplication.willEnterForegroundNotification,
-      object: nil
-    )
   }
   
   func startAnimation() {
     isAnimating = true
-    topCircleLayer.removeAllAnimations()
-    topCircleLayer.add(rotationAnimation, forKey: nil)
+    topCircleLayer.removeAnimation(forKey: .rotationAnimationKey)
+    topCircleLayer.add(rotationAnimation, forKey: .rotationAnimationKey)
   }
 
   func stopAnimation() {
     isAnimating = false
-    topCircleLayer.removeAllAnimations()
+    topCircleLayer.removeAnimation(forKey: .rotationAnimationKey)
   }
 }
 
@@ -182,4 +187,8 @@ extension TKLoaderView {
       }
     }
   }
+}
+
+private extension String {
+  static let rotationAnimationKey = "rotationAnimation"
 }

@@ -24,9 +24,9 @@ public struct TKPullCardHeaderItem {
   }
   
   public init(title: String,
-              subtitle: String,
+              subtitle: String?,
               leftButton: LeftButton? = nil) {
-    let attributedSubtitle = subtitle.withTextStyle(.body2, color: .Text.secondary, alignment: .left)
+    let attributedSubtitle = subtitle?.withTextStyle(.body2, color: .Text.secondary, alignment: .left)
     self.init(title: title,
               subtitle: attributedSubtitle,
               leftButton: leftButton)

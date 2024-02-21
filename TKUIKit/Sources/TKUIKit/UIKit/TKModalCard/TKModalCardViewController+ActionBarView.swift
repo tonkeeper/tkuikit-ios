@@ -82,12 +82,9 @@ private extension TKModalCardViewController.ActionBar {
       backgroundView.rightAnchor.constraint(equalTo: rightAnchor),
       backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
       
-      contentStackView.topAnchor.constraint(equalTo: topAnchor,
-                                            constant: 16),
-      contentStackView.leftAnchor.constraint(equalTo: leftAnchor,
-                                             constant: 16),
-      contentStackView.rightAnchor.constraint(equalTo: rightAnchor,
-                                              constant: -16).withPriority(.defaultHigh),
+      contentStackView.topAnchor.constraint(equalTo: topAnchor),
+      contentStackView.leftAnchor.constraint(equalTo: leftAnchor),
+      contentStackView.rightAnchor.constraint(equalTo: rightAnchor).withPriority(.defaultHigh),
       contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor).withPriority(.defaultHigh),
       
       loaderView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
