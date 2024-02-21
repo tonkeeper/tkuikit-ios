@@ -39,6 +39,7 @@ public protocol TKBottomSheetContentViewController: UIViewController {
   
   var headerItem: TKPullCardHeaderItem? { get }
   var didUpdatePullCardHeaderItem: ((TKPullCardHeaderItem) -> Void)? { get set }
+  func calculateHeight(withWidth width: CGFloat) -> CGFloat
 }
 
 public protocol TKBottomSheetScrollContentViewController: TKBottomSheetContentViewController {

@@ -8,8 +8,16 @@ public final class TKModalCardViewController: UIViewController, TKBottomSheetScr
     TKUIScrollView()
   }()
   
+  public func calculateHeight(withWidth width: CGFloat) -> CGFloat {
+    contentStackView.systemLayoutSizeFitting(
+      CGSize(width: width, height: 0),
+      withHorizontalFittingPriority: .required,
+      verticalFittingPriority: .defaultLow
+    ).height
+  }
+  
   private let scrollViewContentView = UIView()
-  private let contentStackView: UIStackView = {
+  public let contentStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .vertical
     return stackView
@@ -37,7 +45,10 @@ public final class TKModalCardViewController: UIViewController, TKBottomSheetScr
   public override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     updateActionBarBottomConstraint()
-    didUpdateHeight?()
+    if cachedHeight != view.bounds.height {
+      cachedHeight = view.bounds.height
+      didUpdateHeight?()
+    }
   }
   
   public override func viewSafeAreaInsetsDidChange() {
@@ -99,6 +110,7 @@ private extension TKModalCardViewController {
     
     contentStackView.addArrangedSubview(headerView)
     contentStackView.addArrangedSubview(contentView)
+    contentStackView.addArrangedSubview(actionBarView)
     
     setupConstraints()
     
@@ -110,9 +122,6 @@ private extension TKModalCardViewController {
     scrollViewContentView.translatesAutoresizingMaskIntoConstraints = false
     contentStackView.translatesAutoresizingMaskIntoConstraints = false
     actionBarView.translatesAutoresizingMaskIntoConstraints = false
-    
-    actionBarBottomConstraint = actionBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-    actionBarBottomConstraint?.isActive = true
     
     NSLayoutConstraint.activate([
       scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -132,9 +141,6 @@ private extension TKModalCardViewController {
       contentStackView.rightAnchor.constraint(equalTo: scrollViewContentView.rightAnchor,
                                               constant: -16),
       contentStackView.bottomAnchor.constraint(equalTo: scrollViewContentView.bottomAnchor),
-      
-      actionBarView.leftAnchor.constraint(equalTo: view.leftAnchor),
-      actionBarView.rightAnchor.constraint(equalTo: view.rightAnchor)
     ])
   }
   

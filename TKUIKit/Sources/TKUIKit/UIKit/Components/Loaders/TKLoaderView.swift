@@ -31,6 +31,7 @@ public final class TKLoaderView: UIView {
     animation.toValue = CGFloat(Double.pi * 2.0)
     animation.duration = 1.0
     animation.repeatCount = Float.infinity
+    animation.isRemovedOnCompletion = false
     return animation
   }()
   
@@ -63,9 +64,15 @@ public final class TKLoaderView: UIView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
+    let circleRect = CGRect(
+      origin: CGPoint(
+        x: bounds.width/2 - size.side/2,
+        y: bounds.height/2 - size.side/2
+      ),
+      size: CGSize(width: size.side, height: size.side)
+    )
     let path = UIBezierPath(
-      ovalIn: bounds.insetBy(dx: size.side - size.circleSide,
-                             dy: size.side - size.circleSide)
+      ovalIn: circleRect
     )
   
     CATransaction.begin()
@@ -97,6 +104,7 @@ public final class TKLoaderView: UIView {
   
   func startAnimation() {
     isAnimating = true
+    topCircleLayer.removeAllAnimations()
     topCircleLayer.add(rotationAnimation, forKey: nil)
   }
 

@@ -191,15 +191,13 @@ private extension TKBottomSheetViewController {
         self?.didDrag(offset: offset)
       }
       
-      let contentHeight = scrollableContent.scrollView.contentSize.height
+      let contentHeight = scrollableContent.calculateHeight(withWidth: containerView.bounds.width)
       let adjustedHeight = min(contentMaximumHeight, contentHeight)
       scrollableContent.scrollView.isScrollEnabled = adjustedHeight < contentHeight
 
       return adjustedHeight
     } else {
-      let contentHeight = contentViewController.view
-        .systemLayoutSizeFitting(CGSize(width: containerView.bounds.width, height: 0),
-                                 withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
+      let contentHeight = contentViewController.calculateHeight(withWidth: containerView.bounds.width)
       let adjustedHeight = min(contentMaximumHeight, contentHeight)
       return adjustedHeight
     }

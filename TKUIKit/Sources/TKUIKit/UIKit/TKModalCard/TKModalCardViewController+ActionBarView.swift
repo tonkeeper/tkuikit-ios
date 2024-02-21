@@ -111,12 +111,12 @@ private extension TKModalCardViewController.ActionBar {
   }
   
   func showLoader() {
-    loaderView.startAnimation()
+    loaderView.isLoading = true
     loaderView.isHidden = false
   }
   
   func hideLoader() {
-    loaderView.stopAnimation()
+    loaderView.isLoading = false
     loaderView.isHidden = true
   }
   

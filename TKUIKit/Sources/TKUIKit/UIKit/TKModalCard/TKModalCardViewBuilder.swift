@@ -91,8 +91,7 @@ struct TKModalCardViewBuilder {
     )
     
     button.isEnabled = item.isEnabled
-    if item.isActivity {
-    }
+    if item.isActivity {}
     
     button.addTapAction {
       let activityClosure: (Bool) -> Void = { isActivity in
