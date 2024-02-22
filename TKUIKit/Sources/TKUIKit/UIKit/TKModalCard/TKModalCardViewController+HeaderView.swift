@@ -25,6 +25,7 @@ extension TKModalCardViewController {
     // MARK: - ConfigurableView
     
     func configure(model: Configuration.Header) {
+      stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
       guard let viewController = viewController else { return }
       TKModalCardViewBuilder.buildViews(items: model.items, viewController: viewController).forEach { view in
         stackView.addArrangedSubview(view)
