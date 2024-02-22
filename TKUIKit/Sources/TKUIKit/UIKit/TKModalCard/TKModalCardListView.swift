@@ -1,6 +1,6 @@
 import UIKit
 
-final class TKModalCardListView: UIView, ConfigurableView {
+public final class TKModalCardListView: UIView, ConfigurableView {
 
   private let stackView: UIStackView = {
     let stackView = UIStackView()
@@ -25,7 +25,7 @@ final class TKModalCardListView: UIView, ConfigurableView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func configure(model: [TKModalCardViewController.Configuration.ListItem]) {
+  public func configure(model: [TKModalCardViewController.Configuration.ListItem]) {
     stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     model.enumerated().forEach { index, item in
       let listItemView = TKModalCardListItemView()

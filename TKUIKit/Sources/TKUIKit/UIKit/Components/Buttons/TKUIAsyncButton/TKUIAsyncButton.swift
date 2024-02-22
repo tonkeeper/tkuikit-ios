@@ -10,6 +10,12 @@ public protocol TKUIAsyncButtonContentView: UIView, ConfigurableView {
 
 public final class TKUIAsyncButton<Content: TKUIAsyncButtonContentView>: UIView, ConfigurableView {
   
+  public var isLoading: Bool = false {
+    didSet {
+      isActivityViewVisible = isLoading
+    }
+  }
+  
   public var isEnabled: Bool {
     get {
       content.isEnabled
