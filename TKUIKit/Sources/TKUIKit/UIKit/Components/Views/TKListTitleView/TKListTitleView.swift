@@ -14,7 +14,7 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
     }
   }
   
-  private let titleLabel: UILabel = {
+  public let titleLabel: UILabel = {
     let label = UILabel()
     label.font = TKTextStyle.h3.font
     label.textColor = .Text.primary
