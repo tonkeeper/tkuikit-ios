@@ -7,6 +7,14 @@ public final class TKTextInputBackgroundView: UIView {
     }
   }
   
+  var isHighlighted = false {
+    didSet {
+      highlightView.isHighlighted = isHighlighted
+    }
+  }
+  
+  private let highlightView = TKHighlightView()
+  
   public override init(frame: CGRect) {
     super.init(frame: .zero)
     setup()
@@ -15,10 +23,19 @@ public final class TKTextInputBackgroundView: UIView {
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+    highlightView.frame = bounds
+  }
 }
 
 private extension TKTextInputBackgroundView {
   func setup() {
+    addSubview(highlightView)
+    
+    highlightView.layer.cornerRadius = .cornerRadius
+    
     layer.cornerRadius = .cornerRadius
     layer.borderWidth = .borderWidth
     setupState()

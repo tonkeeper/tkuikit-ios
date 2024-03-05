@@ -39,7 +39,10 @@ open class TKTextInput<TextInputView: TKTextInputInputView>: UIControl {
 
   public var placeholder: String? {
     get { placeholderLabel.text }
-    set { placeholderLabel.text = newValue }
+    set {
+      placeholderLabel.text = newValue
+      setNeedsLayout()
+    }
   }
   
   public var isValid = true {
@@ -48,10 +51,24 @@ open class TKTextInput<TextInputView: TKTextInputInputView>: UIControl {
     }
   }
   
+  public var isHighlightable: Bool = false
+  
   public var textInputState: TKTextInputFieldState = .inactive {
     didSet {
       UIView.animate(withDuration: 0.2) {
         self.didUpdateState()
+      }
+    }
+  }
+  
+  open override var isHighlighted: Bool {
+    didSet {
+      guard isHighlightable else { return }
+      switch textInputState {
+      case .inactive:
+        backgroundView.isHighlighted = isHighlighted
+      default:
+        backgroundView.isHighlighted = false
       }
     }
   }
@@ -91,6 +108,7 @@ open class TKTextInput<TextInputView: TKTextInputInputView>: UIControl {
   
   func updateState() {
     let isFirstResponder = textInputView.isFirstResponder
+    textInputView.isUserInteractionEnabled = isFirstResponder
     switch (isFirstResponder, isValid) {
     case (false, true):
       textInputState = .inactive
