@@ -7,7 +7,7 @@ public final class TKHeaderButton: TKButton {
       didUpdateCategory()
     }
   }
-  init(category: TKUIActionButtonCategory = .secondary) {
+  public init(category: TKUIActionButtonCategory = .secondary) {
     self.category = category
     super.init(frame: .zero)
     setup()
@@ -41,8 +41,8 @@ private extension TKHeaderButton {
 }
 
 private extension CGFloat {
-  static let height: CGFloat = 32
-  static let cornerRadius: CGFloat = 16
+  static let height: CGFloat = 36
+  static let cornerRadius: CGFloat = 18
 }
 
 private extension UIEdgeInsets {

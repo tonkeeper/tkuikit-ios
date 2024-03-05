@@ -16,11 +16,14 @@ let package = Package(
         )
     ],
     dependencies: [
+      .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.0.1"))
     ],
     targets: [
         .target(
             name: "TKUIKit",
-            dependencies: [],
+            dependencies: [
+              .product(name: "SnapKit-Dynamic", package: "SnapKit")
+            ],
             path: "TKUIKit/Sources/TKUIKit",
             resources: [.process("Resources/Fonts")]
         ),
