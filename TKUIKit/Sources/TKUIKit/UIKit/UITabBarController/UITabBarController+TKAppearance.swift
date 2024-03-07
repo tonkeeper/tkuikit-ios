@@ -12,7 +12,8 @@ public extension UITabBarController {
     
     func createTabBarAppearance() -> UITabBarAppearance {
       let appearance = UITabBarAppearance()
-      appearance.configureWithTransparentBackground()
+      appearance.configureWithOpaqueBackground()
+      appearance.backgroundColor = .Background.transparent
       appearance.stackedLayoutAppearance = itemAppearance
       return appearance
     }
