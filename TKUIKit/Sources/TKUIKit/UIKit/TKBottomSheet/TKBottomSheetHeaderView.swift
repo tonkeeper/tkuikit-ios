@@ -67,7 +67,6 @@ public final class TKBottomSheetHeaderView: UIView, ConfigurableView {
       titleLeftButtonConstraint.isActive = false
       titleLeftEdgeConstraint.isActive = true
     }
-//    layoutIfNeeded()
   }
   
   lazy var titleCenterXConstraint: NSLayoutConstraint = {
