@@ -165,6 +165,11 @@ public extension UIImage {
           .withRenderingMode(.alwaysTemplate)
         }
       }
+      public enum Size96 {
+        public static var tonIcon: UIImage {
+          .imageWithName("Icons/96/ton_icon")
+        }
+      }
     }
   }
 }
