@@ -10,7 +10,13 @@ public struct TKTextStyle {
   }
   
   public var baselineOffset: CGFloat {
-    (lineHeight - font.lineHeight) / 2.0 / adjustment
+    let delimeter: CGFloat
+    if #available(iOS 16, *) {
+      delimeter = 2
+    } else {
+      delimeter = 4
+    }
+    return (lineHeight - font.lineHeight) / delimeter
   }
   
   public var lineSpacing: CGFloat {
@@ -23,6 +29,31 @@ public struct TKTextStyle {
     self.font = font
     self.lineHeight = lineHeight
     self.uppercased = uppercased
+  }
+  
+  public func getAttributes(color: UIColor,
+                            alignment: NSTextAlignment = .left,
+                            lineBreakMode: NSLineBreakMode = .byTruncatingTail) -> [NSAttributedString.Key: Any] {
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.minimumLineHeight = lineHeight
+    paragraphStyle.maximumLineHeight = lineHeight
+    paragraphStyle.alignment = alignment
+    paragraphStyle.lineBreakMode = lineBreakMode
+    
+    let baselineOffsetDelimeter: CGFloat
+    if #available(iOS 16, *) {
+      baselineOffsetDelimeter = 2
+    } else {
+      baselineOffsetDelimeter = 4
+    }
+    
+    let attributes: [NSAttributedString.Key: Any] = [
+      .font: font,
+      .foregroundColor: color,
+      .paragraphStyle: paragraphStyle,
+      .baselineOffset: baselineOffset
+    ]
+    return attributes
   }
 }
 

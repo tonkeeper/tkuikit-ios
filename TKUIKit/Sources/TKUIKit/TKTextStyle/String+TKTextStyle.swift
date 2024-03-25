@@ -6,19 +6,14 @@ public extension String {
                      color: UIColor,
                      alignment: NSTextAlignment = .left,
                      lineBreakMode: NSLineBreakMode = .byTruncatingTail) -> NSAttributedString {    
-    let paragraphStyle = NSMutableParagraphStyle()
-    paragraphStyle.minimumLineHeight = textStyle.lineHeight
-    paragraphStyle.maximumLineHeight = textStyle.lineHeight
-    paragraphStyle.alignment = alignment
-    paragraphStyle.lineBreakMode = lineBreakMode
-    
-    let attributes: [NSAttributedString.Key: Any] = [
-      .font: textStyle.font,
-      .foregroundColor: color,
-      .paragraphStyle: paragraphStyle,
-      .baselineOffset: (textStyle.lineHeight - textStyle.font.lineHeight)/2
-    ]
     let string = textStyle.uppercased ? uppercased() : self
-    return NSAttributedString(string: string, attributes: attributes)
+    return NSAttributedString(
+      string: string,
+      attributes: textStyle.getAttributes(
+        color: color,
+        alignment: alignment,
+        lineBreakMode: lineBreakMode
+      )
+    )
   }
 }
