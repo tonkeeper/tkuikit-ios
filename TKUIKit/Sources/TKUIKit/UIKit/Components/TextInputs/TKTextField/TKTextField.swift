@@ -1,32 +1,30 @@
 import UIKit
 
-final class TKTextField: UIView {
+public final class TKTextField: UIControl {
   
-  var isActive: Bool {
+  public var isActive: Bool {
     textFieldInputView.isActive
   }
   
-  var text: String! {
+  public var text: String! {
     get { textFieldInputView.text }
     set { textFieldInputView.text = newValue }
   }
   
-  var didUpdateText: ((String) -> Void)?
-  var didBeginEditing: (() -> Void)?
-  var didEndEditing: (() -> Void)?
+  public var didUpdateText: ((String) -> Void)?
+  public var didBeginEditing: (() -> Void)?
+  public var didEndEditing: (() -> Void)?
   
-  var state: TKTextFieldState = .inactive {
+  var textFieldState: TKTextFieldState = .inactive {
     didSet {
-      backgroundView.backgroundColor = state.backgroundColor
-      backgroundView.layer.borderColor = state.borderColor.cgColor
-      textFieldInputView.tintColor = state.tintColor
+      didUpdateState()
     }
   }
   
   private let backgroundView = TKTextFieldBackgroundView()
   private let textFieldInputView: TKTextFieldInputView
   
-  init(textFieldInputView: TKTextFieldInputView) {
+  public init(textFieldInputView: TKTextFieldInputView) {
     self.textFieldInputView = textFieldInputView
     super.init(frame: .zero)
     setup()
@@ -34,6 +32,16 @@ final class TKTextField: UIView {
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  @discardableResult
+  public override func becomeFirstResponder() -> Bool {
+    textFieldInputView.becomeFirstResponder()
+  }
+  
+  @discardableResult
+  public override func resignFirstResponder() -> Bool {
+    textFieldInputView.resignFirstResponder()
   }
 }
 
@@ -44,17 +52,25 @@ private extension TKTextField {
     }
     
     textFieldInputView.didBeginEditing = { [weak self] in
-      self?.didUpdateState()
+      self?.didUpdateActiveState()
     }
     
     textFieldInputView.didEndEditing = { [weak self] in
-      self?.didUpdateState()
+      self?.didUpdateActiveState()
     }
+    
+    didUpdateState()
+    
+    backgroundView.isUserInteractionEnabled = false
     
     addSubview(backgroundView)
     addSubview(textFieldInputView)
     
     setupConstraints()
+    
+    addAction(UIAction(handler: { [weak self] _ in
+      self?.textFieldInputView.becomeFirstResponder()
+    }), for: .touchUpInside)
   }
   
   func setupConstraints() {
@@ -68,16 +84,24 @@ private extension TKTextField {
   }
   
   func didUpdateState() {
+    UIView.animate(withDuration: 0.2) { [backgroundView, textFieldInputView, textFieldState] in
+      backgroundView.backgroundColor = textFieldState.backgroundColor
+      backgroundView.layer.borderColor = textFieldState.borderColor.cgColor
+      textFieldInputView.tintColor = textFieldState.tintColor
+    }
+  }
+  
+  func didUpdateActiveState() {
     let isValid = true
     switch (isActive, isValid) {
     case (false, true):
-      state = .inactive
+      textFieldState = .inactive
     case (true, true):
-      state = .active
+      textFieldState = .active
     case (false, false):
-      state = .error
+      textFieldState = .error
     case (true, false):
-      state = .error
+      textFieldState = .error
     }
   }
 }

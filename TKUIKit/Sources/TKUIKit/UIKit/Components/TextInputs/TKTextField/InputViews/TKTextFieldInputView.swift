@@ -1,7 +1,7 @@
 import UIKit
 import SnapKit
 
-protocol TKTextFieldInputViewControl: UIView {
+public protocol TKTextFieldInputViewControl: UIView {
   var isActive: Bool { get }
   var text: String! { get set }
   var tintColor: UIColor! { get set }
@@ -10,27 +10,27 @@ protocol TKTextFieldInputViewControl: UIView {
   var didEndEditing: (() -> Void)? { get set }
 }
 
-final class TKTextFieldInputView: UIView, TKTextFieldInputViewControl {
+public final class TKTextFieldInputView: UIControl, TKTextFieldInputViewControl {
   
-  var isActive: Bool {
+  public var isActive: Bool {
     textInputControl.isActive
   }
   
-  var text: String! {
+  public var text: String! {
     get { textInputControl.text }
     set { textInputControl.text = newValue }
   }
   
-  override var tintColor: UIColor! {
+  public override var tintColor: UIColor! {
     get { textInputControl.tintColor }
     set { textInputControl.tintColor = newValue }
   }
   
-  var didUpdateText: ((String) -> Void)?
-  var didBeginEditing: (() -> Void)?
-  var didEndEditing: (() -> Void)?
+  public var didUpdateText: ((String) -> Void)?
+  public var didBeginEditing: (() -> Void)?
+  public var didEndEditing: (() -> Void)?
 
-  var padding: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16) {
+  public var padding: UIEdgeInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16) {
     didSet {
       textInputControl.snp.remakeConstraints { make in
         make.top.left.bottom.equalTo(self).inset(padding)
@@ -48,7 +48,7 @@ final class TKTextFieldInputView: UIView, TKTextFieldInputViewControl {
     configuration.action = { [weak self] in
       self?.textInputControl.text = ""
       self?.didUpdateText?("")
-      self?.textInputControlDidUpdateText("")
+      self?.updateClearButtonVisibility()
     }
     button.configuration = configuration
     button.isHidden = true
@@ -58,7 +58,7 @@ final class TKTextFieldInputView: UIView, TKTextFieldInputViewControl {
   private var textInputControlRightEdgeConstraint: Constraint?
   private var textInputControlRightClearButtonConstraint: Constraint?
 
-  init(textInputControl: TKTextFieldInputViewControl) {
+  public init(textInputControl: TKTextFieldInputViewControl) {
     self.textInputControl = textInputControl
     super.init(frame: .zero)
     setup()
@@ -67,20 +67,32 @@ final class TKTextFieldInputView: UIView, TKTextFieldInputViewControl {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  @discardableResult
+  public override func becomeFirstResponder() -> Bool {
+    textInputControl.becomeFirstResponder()
+  }
+  
+  @discardableResult
+  public override func resignFirstResponder() -> Bool {
+    textInputControl.resignFirstResponder()
+  }
 }
 
 private extension TKTextFieldInputView {
   func setup() {
     textInputControl.didUpdateText = { [weak self] text in
-      self?.textInputControlDidUpdateText(text)
+      self?.updateClearButtonVisibility()
       self?.didUpdateText?(text)
     }
     
     textInputControl.didBeginEditing = { [weak self] in
+      self?.updateClearButtonVisibility()
       self?.didBeginEditing?()
     }
     
     textInputControl.didEndEditing = { [weak self] in
+      self?.updateClearButtonVisibility()
       self?.didEndEditing?()
     }
     
@@ -88,6 +100,10 @@ private extension TKTextFieldInputView {
     addSubview(clearButton)
     
     setupConstraints()
+    
+    addAction(UIAction(handler: { [weak self] _ in
+      self?.textInputControl.becomeFirstResponder()
+    }), for: .touchUpInside)
   }
   
   func setupConstraints() {
@@ -105,65 +121,17 @@ private extension TKTextFieldInputView {
       make.top.right.bottom.equalTo(self)
     }
   }
-  
-  func textInputControlDidUpdateText(_ text: String) {
-    if text.isEmpty {
-      clearButton.isHidden = true
-      textInputControlRightClearButtonConstraint?.deactivate()
-      textInputControlRightEdgeConstraint?.activate()
-    } else {
+
+  func updateClearButtonVisibility() {
+    let isClearButtonVisible = !text.isEmpty && isActive
+    if isClearButtonVisible {
       clearButton.isHidden = false
       textInputControlRightEdgeConstraint?.deactivate()
       textInputControlRightClearButtonConstraint?.activate()
+    } else {
+      clearButton.isHidden = true
+      textInputControlRightClearButtonConstraint?.deactivate()
+      textInputControlRightEdgeConstraint?.activate()
     }
-  }
-}
-
-final class TKTextInputTextViewControl: UITextView, TKTextFieldInputViewControl {
-  var didUpdateText: ((String) -> Void)?
-  var didBeginEditing: (() -> Void)?
-  var didEndEditing: (() -> Void)?
-  
-  var isActive: Bool {
-    isFirstResponder
-  }
-  
-  init() {
-    let storage = NSTextStorage()
-    let manager = NSLayoutManager()
-    let container = NSTextContainer()
-    storage.addLayoutManager(manager)
-    manager.addTextContainer(container)
-    super.init(frame: .zero, textContainer: container)
-    setup()
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-}
-
-private extension TKTextInputTextViewControl {
-  func setup() {
-    isScrollEnabled = false
-    backgroundColor = .clear
-    delegate = self
-    textContainer.lineFragmentPadding = TKTextStyle.body1.lineSpacing
-    textContainerInset = .zero
-    typingAttributes = TKTextStyle.body1.getAttributes(color: .Text.primary, alignment: .left, lineBreakMode: .byWordWrapping)
-  }
-}
-
-extension TKTextInputTextViewControl: UITextViewDelegate {
-  func textViewDidChange(_ textView: UITextView) {
-    didUpdateText?(textView.text)
-  }
-  
-  func textViewDidBeginEditing(_ textView: UITextView) {
-    didBeginEditing?()
-  }
-  
-  func textViewDidEndEditing(_ textView: UITextView) {
-    didEndEditing?()
   }
 }

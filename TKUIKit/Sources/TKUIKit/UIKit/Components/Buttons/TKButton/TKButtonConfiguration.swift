@@ -43,8 +43,8 @@ public extension TKButton {
   }
 }
 
-extension TKButton.Configuration {
-  public struct Content: Hashable {
+public extension TKButton.Configuration {
+  struct Content: Hashable {
     public enum Title: Hashable {
       case plainString(String)
       case attributedString(NSAttributedString)
