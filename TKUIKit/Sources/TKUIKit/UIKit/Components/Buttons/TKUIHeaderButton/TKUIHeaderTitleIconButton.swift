@@ -24,6 +24,8 @@ public final class TKUIHeaderTitleIconButton: TKUIButton<TKUIButtonTitleIconCont
     case .normal:
       backgroundView.setBackgroundColor(.Button.secondaryBackground)
       buttonContentView.setForegroundColor(.Button.primaryForeground)
+    case .selected:
+      break
     }
   }
 }

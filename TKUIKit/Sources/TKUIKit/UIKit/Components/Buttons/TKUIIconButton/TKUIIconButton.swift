@@ -23,6 +23,9 @@ public final class TKUIIconButton: TKUIButton<TKUIIconButtonContentView, TKUIBut
     case .normal:
       iconColor = .Icon.primary
       titleColor = .Text.secondary
+    case .selected:
+      iconColor = .Icon.primary
+      titleColor = .Text.secondary
     }
     
     buttonContentView.setIconColor(iconColor)

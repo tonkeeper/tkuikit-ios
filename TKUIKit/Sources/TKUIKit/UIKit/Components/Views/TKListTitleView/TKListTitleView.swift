@@ -6,11 +6,11 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
   
   public struct Model: Hashable {
     public let title: String?
-    public let buttonModel: TKButton.Model?
+    public let buttonContent: TKButton.Configuration.Content?
     
-    public init(title: String?, buttonModel: TKButton.Model? = nil) {
+    public init(title: String?, buttonContent: TKButton.Configuration.Content? = nil) {
       self.title = title
-      self.buttonModel = buttonModel
+      self.buttonContent = buttonContent
     }
   }
   
@@ -22,7 +22,7 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
     return label
   }()
   
-  private let button = TKHeaderButton()
+  private let button = TKButton(configuration: .titleHeaderButtonConfiguration())
   private let stackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .horizontal
@@ -53,8 +53,8 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
   
   public func configure(model: Model) {
     titleLabel.text = model.title
-    if let buttonModel = model.buttonModel {
-      button.configure(model: buttonModel)
+    if let buttonContent = model.buttonContent {
+      button.configuration.content = buttonContent
       button.isHidden = false
     } else {
       button.isHidden = true
@@ -64,8 +64,7 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
 
 private extension TKListTitleView {
   func setup() {
-    
-    button.setTapAction { [weak self] in
+    button.configuration.action = { [weak self] in
       self?.didTapButton?()
     }
     

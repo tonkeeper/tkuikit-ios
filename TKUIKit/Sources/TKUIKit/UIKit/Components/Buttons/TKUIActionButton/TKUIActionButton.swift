@@ -36,6 +36,8 @@ public final class TKUIActionButton: TKUIButton<TKUIButtonTitleIconContentView, 
     case .normal:
       backgroundView.setBackgroundColor(category.backgroundColor)
       buttonContentView.setForegroundColor(category.titleColor)
+    case .selected:
+      break
     }
   }
   

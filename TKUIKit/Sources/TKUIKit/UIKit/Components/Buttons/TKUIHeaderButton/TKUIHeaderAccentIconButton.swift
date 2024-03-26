@@ -24,6 +24,8 @@ public final class TKUIHeaderAccentIconButton: TKUIButton<TKUIHeaderButtonIconCo
       buttonContentView.setForegroundColor(foregroundColor.withAlphaComponent(0.48))
     case .normal:
       buttonContentView.setForegroundColor(foregroundColor)
+    case .selected:
+      break
     }
   }
 }

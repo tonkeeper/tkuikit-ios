@@ -1,189 +1,108 @@
 import UIKit
 
-open class TKButton: UIControl, ConfigurableView {
+open class TKButton: UIControl {
   
-  public enum State {
-    case normal
-    case highlighted
-    case disabled
-    case selected
-  }
-  
-  public var backgroundColors: [State: UIColor] = [.normal: .Text.primary] {
+  public var configuration = TKButton.Configuration() {
     didSet {
-      updateBackground()
-    }
-  }
-  public var foregroundColors: [State: UIColor] = [.normal: .clear] {
-    didSet {
-      updateForeground()
-    }
-  }
-  public var contentPadding: UIEdgeInsets = .zero {
-    didSet {
-      didUpdateContentPadding()
-    }
-  }
-  public var cornerRadius: CGFloat = 0 {
-    didSet {
-      didUpdateCornerRadius()
-    }
-  }
-  public var tapAreaInsets: UIEdgeInsets = .zero
-  public var textStyle: TKTextStyle = .label1 {
-    didSet {
-      titleLabel.font = textStyle.font
+      didUpdateConfiguration()
     }
   }
   
-  public override var isHighlighted: Bool {
-    didSet {
-      didUpdateState()
-    }
+  public var padding: UIEdgeInsets = .zero {
+    didSet { invalidateIntrinsicContentSize() }
   }
   
-  public override var isEnabled: Bool {
-    didSet {
-      didUpdateState()
-    }
+  open override var isHighlighted: Bool {
+    didSet { didUpdateControlState() }
   }
   
-  public override var isSelected: Bool {
-    didSet {
-      didUpdateState()
-    }
+  open override var isSelected: Bool {
+    didSet { didUpdateControlState() }
   }
   
-  public private(set) var buttonState: State = .normal
+  open override var isEnabled: Bool {
+    didSet { didUpdateControlState() }
+  }
   
-  private let contentStackView = UIStackView()
-  private let titleLabel = UILabel()
-  private let iconImageView = UIImageView()
+  let buttonContentView = TKButtonContentView()
   
-  private lazy var contentTopConstraint: NSLayoutConstraint = {
-    contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentPadding.top)
-  }()
-  private lazy var contentLeftConstraint: NSLayoutConstraint = {
-    contentStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: contentPadding.left)
-  }()
-  private lazy var contentBottomConstraint: NSLayoutConstraint = {
-    contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: contentPadding.bottom)
-      .withPriority(.defaultHigh)
-  }()
-  private lazy var contentRightConstraint: NSLayoutConstraint = {
-    contentStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: contentPadding.right)
-      .withPriority(.defaultHigh)
-  }()
+  var buttonState: TKButtonState = .normal {
+    didSet { didUpdateButtonState() }
+  }
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
     setup()
   }
   
-  required public init?(coder: NSCoder) {
+  public init(configuration: Configuration) {
+    self.configuration = configuration
+    super.init(frame: .zero)
+    setup()
+  }
+  
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  public struct Model: Hashable {
-    public struct Icon: Hashable {
-      public let icon: UIImage
-      public let position: IconPosition
-      public init(icon: UIImage, position: IconPosition) {
-        self.icon = icon
-        self.position = position
-      }
-    }
-    public enum IconPosition: Hashable {
-      case left
-      case right
-    }
-    public let title: String?
-    public let icon: Icon?
-    
-    public init(title: String? = nil, 
-                icon: Icon? = nil) {
-      self.title = title
-      self.icon = icon
-    }
+  open override var intrinsicContentSize: CGSize {
+    let contentViewIntrinsicContentSize = buttonContentView.intrinsicContentSize
+    let width = contentViewIntrinsicContentSize.width + padding.left + padding.right
+    let height = contentViewIntrinsicContentSize.height + padding.top + padding.bottom
+    return CGSize(width: width, height: height)
   }
   
-  public func configure(model: Model) {
-    titleLabel.text = model.title
-    contentStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    
-    if model.title != nil {
-      contentStackView.addArrangedSubview(titleLabel)
-    }
-    if let icon = model.icon {
-      switch icon.position {
-      case .left:
-        contentStackView.insertArrangedSubview(iconImageView, at: 0)
-      case .right:
-        contentStackView.addArrangedSubview(iconImageView)
-      }
-      iconImageView.image = icon.icon
-    }
+  open override func sizeThatFits(_ size: CGSize) -> CGSize {
+    let contentViewSizeThatFits = buttonContentView.sizeThatFits(size)
+    let width = contentViewSizeThatFits.width + padding.left + padding.right
+    let height = contentViewSizeThatFits.height + padding.top + padding.bottom
+    return CGSize(width: width, height: height)
   }
   
-  public func setTapAction(_ action: @escaping () -> Void) {
-    enumerateEventHandlers { action, targetAction, event, stop in
-      if let action = action {
-        removeAction(action, for: event)
-      }
-    }
+  open override func layoutSubviews() {
+    super.layoutSubviews()
     
-    addAction(UIAction(handler: { _ in
-      action()
-    }), for: .touchUpInside)
+    let contentViewSizeThatFits = buttonContentView.sizeThatFits(bounds.size)
+    let availableWidth = bounds.width - padding.left - padding.right
+    let availableHeight = bounds.height - padding.top - padding.bottom
+    
+    let contentViewWidth = availableWidth
+    let contentViewHeight = min(contentViewSizeThatFits.height, availableHeight)
+    
+    let contentViewFrame = CGRect(
+      x: bounds.width/2 - contentViewWidth/2,
+      y: bounds.height/2 - contentViewHeight/2,
+      width: contentViewWidth,
+      height: contentViewHeight
+    )
+    buttonContentView.frame = contentViewFrame
   }
   
-  public override func setContentHuggingPriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+  open override func setContentHuggingPriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
     super.setContentHuggingPriority(priority, for: axis)
-    contentStackView.setContentHuggingPriority(.required, for: .horizontal)
-    titleLabel.setContentHuggingPriority(.required, for: .horizontal)
+    buttonContentView.setContentHuggingPriority(priority, for: axis)
   }
 }
 
 private extension TKButton {
   func setup() {
-    contentStackView.isUserInteractionEnabled = false
+    buttonContentView.isUserInteractionEnabled = false
+    addSubview(buttonContentView)
     
-    titleLabel.textAlignment = .center
+    didUpdateConfiguration()
     
-    addSubview(contentStackView)
-    
-    contentStackView.addArrangedSubview(titleLabel)
-    
-    updateBackground()
-    updateForeground()
-    
-    setupConstraints()
+    addAction(UIAction(handler: { [weak self] _ in
+      self?.configuration.action?()
+    }), for: .touchUpInside)
   }
   
-  func setupConstraints() {
-    contentStackView.translatesAutoresizingMaskIntoConstraints = false
-    
-    NSLayoutConstraint.activate([
-      contentTopConstraint,
-      contentLeftConstraint,
-      contentRightConstraint,
-      contentBottomConstraint
-    ])
+  func didUpdateButtonState() {
+    buttonContentView.backgroundColor = configuration.backgroundColors[buttonState]
+    buttonContentView.titleLabel.alpha = configuration.contentAlpha[buttonState] ?? 1
+    buttonContentView.imageView.alpha = configuration.contentAlpha[buttonState] ?? 1
   }
   
-  func updateBackground() {
-    let defaultColor = backgroundColors[.normal]
-    backgroundColor = backgroundColors[buttonState] ?? defaultColor
-  }
-  
-  func updateForeground() {
-    let defaultColor = foregroundColors[.normal]
-    let color: UIColor? = foregroundColors[buttonState] ?? defaultColor
-    titleLabel.textColor = color
-    iconImageView.tintColor = color
-  }
-  
-  func didUpdateState() {
+  func didUpdateControlState() {
     switch (isEnabled, isHighlighted, isSelected) {
     case (false, _, _):
       buttonState = .disabled
@@ -194,21 +113,24 @@ private extension TKButton {
     case (true, false, false):
       buttonState = .normal
     }
-    updateBackground()
-    updateForeground()
   }
   
-  func didUpdateContentPadding() {
-    contentTopConstraint.constant = contentPadding.top
-    contentLeftConstraint.constant = contentPadding.left
-    contentBottomConstraint.constant = -contentPadding.bottom
-    contentRightConstraint.constant = -contentPadding.right
-  }
-  
-  func didUpdateCornerRadius() {
-    layer.masksToBounds = cornerRadius > 0
-    layer.cornerRadius = cornerRadius
+  func didUpdateConfiguration() {
+    self.padding = configuration.padding
+    self.buttonContentView.padding = configuration.contentPadding
+    self.buttonContentView.spacing = configuration.spacing
+    self.buttonContentView.iconPosition = configuration.iconPosition
+    self.buttonContentView.iconTintColor = configuration.iconTintColor
+    self.buttonContentView.backgroundColor = configuration.backgroundColors[buttonState]
+    self.buttonContentView.cornerRadius = configuration.cornerRadius
+    switch configuration.content.title {
+    case .plainString(let string):
+      self.buttonContentView.title = string.withTextStyle(configuration.textStyle, color: configuration.textColor, alignment: .center)
+    case .attributedString(let attributedString):
+      self.buttonContentView.title = attributedString
+    case .none:
+      self.buttonContentView.title = nil
+    }
+    self.buttonContentView.icon = configuration.content.icon
   }
 }
-
-extension UIControl.State: Hashable {}

@@ -52,7 +52,7 @@ private extension TKUIKeyboardButtonPlainBackgroundView {
     let backgroundColor: UIColor
     let transform: CGAffineTransform
     switch state {
-    case .normal, .disabled:
+    case .normal, .disabled, .selected:
       backgroundColor = .clear
       transform = CGAffineTransform(
         scaleX: .notHighlightedScale,
