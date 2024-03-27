@@ -38,6 +38,8 @@ public final class TKMnemonicTextField: UIControl {
   public var didEndEditing: (() -> Void)?
   public var shouldPaste: ((String) -> Bool)?
   
+  public var didTapReturn: (() -> Void)?
+  
   var textFieldState: TKTextFieldState = .inactive {
     didSet {
       didUpdateState()
@@ -45,7 +47,12 @@ public final class TKMnemonicTextField: UIControl {
   }
   
   private let backgroundView = TKTextFieldBackgroundView()
-  private let textFieldInputView: TKTextFieldInputView
+  private lazy var textFieldInputView: TKTextFieldInputView = {
+    let textInputControl = TKTextInputTextFieldControl()
+    textInputControl.delegate = self
+    let textFieldInputView = TKTextFieldInputView(textInputControl: textInputControl)
+    return textFieldInputView
+  }()
   private let indexNumberLabel: UILabel = {
     let label = UILabel()
     label.font = TKTextStyle.body1.font
@@ -57,7 +64,6 @@ public final class TKMnemonicTextField: UIControl {
   }()
   
   public init() {
-    self.textFieldInputView = TKTextFieldInputView(textInputControl: TKTextInputTextFieldControl())
     super.init(frame: .zero)
     setup()
   }
@@ -154,5 +160,13 @@ private extension TKMnemonicTextField {
     case (true, false):
       textFieldState = .error
     }
+  }
+}
+
+extension TKMnemonicTextField: UITextFieldDelegate {
+  public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    guard let didTapReturn = didTapReturn else { return false }
+    didTapReturn()
+    return true
   }
 }

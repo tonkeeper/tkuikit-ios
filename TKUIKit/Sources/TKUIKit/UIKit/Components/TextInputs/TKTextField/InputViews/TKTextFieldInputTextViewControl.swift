@@ -65,7 +65,7 @@ private extension TKTextInputTextViewControl {
   }
 }
 
-extension TKTextInputTextViewControl: UITextViewDelegate {
+extension TKTextInputTextViewControl: UITextViewDelegate {  
   public func textViewDidChange(_ textView: UITextView) {
     didUpdateText?(textView.text)
   }
