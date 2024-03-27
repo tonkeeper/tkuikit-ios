@@ -145,6 +145,11 @@ private extension TKButtonContentView {
 }
 
 public extension UIView {
+  func tkSizeThatFits(_ width: CGFloat) -> CGSize {
+    let sizeThatFits = self.sizeThatFits(CGSize(width: width, height: 0))
+    return CGSize(width: min(width, sizeThatFits.width),
+                  height: sizeThatFits.height)
+  }
   func tkSizeThatFits(_ size: CGSize) -> CGSize {
     let sizeThatFits = self.sizeThatFits(size)
     return CGSize(width: min(size.width, sizeThatFits.width),

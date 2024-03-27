@@ -14,8 +14,8 @@ public final class TKListItemTitleSubtitleView: UIView, ReusableView {
   }
   
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
-    let titleSize = titleLabel.tkSizeThatFits(size)
-    let subtitleSize = subtitleLabel.tkSizeThatFits(size)
+    let titleSize = titleLabel.tkSizeThatFits(size.width)
+    let subtitleSize = subtitleLabel.tkSizeThatFits(size.width)
     
     let width = [titleSize.width, subtitleSize.width].max() ?? 0
     let height = titleSize.height + subtitleSize.height
@@ -29,7 +29,7 @@ public final class TKListItemTitleSubtitleView: UIView, ReusableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let subtitleSizeToFit = subtitleLabel.tkSizeThatFits(CGSize(width: bounds.width, height: 0))
+    let subtitleSizeToFit = subtitleLabel.tkSizeThatFits(bounds.width)
     let subtitleSize = CGSize(width: bounds.width, height: subtitleSizeToFit.height)
     let subtitleOrigin = CGPoint(x: 0, y: bounds.height - subtitleSize.height)
     let subtitleFrame = CGRect(origin: subtitleOrigin, size: subtitleSize)

@@ -22,6 +22,12 @@ public final class TKTextField: UIControl {
     textFieldInputView.isActive
   }
   
+  public var isValid = true {
+    didSet {
+      didUpdateActiveState()
+    }
+  }
+  
   public var text: String! {
     get { textFieldInputView.inputText }
     set { textFieldInputView.inputText = newValue }
@@ -128,7 +134,6 @@ private extension TKTextField {
   }
   
   func didUpdateActiveState() {
-    let isValid = true
     switch (isActive, isValid) {
     case (false, true):
       textFieldState = .inactive

@@ -92,17 +92,17 @@ public extension TKButton.Configuration {
     )
   }
   
-  static func titleHeaderButtonConfiguration() -> TKButton.Configuration {
+  static func titleHeaderButtonConfiguration(category: TKActionButtonCategory) -> TKButton.Configuration {
     TKButton.Configuration(
       content: Content(),
       contentPadding: UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12),
       padding: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8),
       textStyle: .label2,
-      textColor: .Button.secondaryForeground,
+      textColor: category.titleColor,
       backgroundColors: [
-        .normal: .Button.secondaryBackground,
-        .highlighted: .Button.secondaryBackgroundHighlighted,
-        .disabled: .Button.secondaryBackgroundDisabled
+        .normal: category.backgroundColor,
+        .highlighted: category.highlightedBackgroundColor,
+        .disabled: category.disabledBackgroundColor
       ],
       cornerRadius: 16,
       action: nil

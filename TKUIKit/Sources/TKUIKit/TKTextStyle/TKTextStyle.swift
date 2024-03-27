@@ -23,9 +23,9 @@ public struct TKTextStyle {
     return lineHeight - font.lineHeight
   }
   
-  init(font: UIFont,
-       lineHeight: CGFloat,
-       uppercased: Bool = false) {
+  public init(font: UIFont,
+              lineHeight: CGFloat,
+              uppercased: Bool = false) {
     self.font = font
     self.lineHeight = lineHeight
     self.uppercased = uppercased

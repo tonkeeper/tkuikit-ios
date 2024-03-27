@@ -22,7 +22,7 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
     return label
   }()
   
-  private let button = TKButton(configuration: .titleHeaderButtonConfiguration())
+  private let button = TKButton(configuration: .titleHeaderButtonConfiguration(category: .secondary))
   private let stackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .horizontal

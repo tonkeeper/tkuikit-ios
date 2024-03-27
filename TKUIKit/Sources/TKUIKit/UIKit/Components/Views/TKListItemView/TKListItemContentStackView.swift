@@ -15,7 +15,7 @@ public final class TKListItemContentStackView: UIView, ReusableView {
   
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
     let titleSubtitleSize = titleSubtitleView.sizeThatFits(size)
-    let descriptionSize = descriptionLabel.tkSizeThatFits(size)
+    let descriptionSize = descriptionLabel.tkSizeThatFits(size.width)
     
     let width = [titleSubtitleSize.width, descriptionSize.width].max() ?? 0
     let height = titleSubtitleSize.height + descriptionSize.height
@@ -29,7 +29,7 @@ public final class TKListItemContentStackView: UIView, ReusableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let descriptionSize = descriptionLabel.tkSizeThatFits(CGSize(width: bounds.width, height: 0))
+    let descriptionSize = descriptionLabel.tkSizeThatFits(bounds.width)
     let descriptionOrigin = CGPoint(x: 0, y: bounds.height - descriptionSize.height)
     let descriptionFrame = CGRect(origin: descriptionOrigin, size: descriptionSize)
     
