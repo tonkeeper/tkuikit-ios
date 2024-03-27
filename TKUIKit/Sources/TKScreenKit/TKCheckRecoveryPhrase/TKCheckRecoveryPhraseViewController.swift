@@ -58,5 +58,9 @@ private extension TKCheckRecoveryPhraseViewController {
     viewModel.didUpdateIsButtonEnabled = { [weak customView] isEnabled in
       customView?.continueButton.isEnabled = isEnabled
     }
+    
+    viewModel.didUpdateContinueButton = { [weak customView] configuration in
+      customView?.continueButton.configuration = configuration
+    }
   }
 }

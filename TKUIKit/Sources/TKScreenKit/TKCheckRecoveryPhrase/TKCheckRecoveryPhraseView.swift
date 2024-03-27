@@ -22,14 +22,10 @@ public final class TKCheckRecoveryPhraseView: UIView, ConfigurableView {
     return view
   }()
   
-  var inputTextFields = [TKMnemonicTextInputField]()
+  var inputTextFields = [TKMnemonicTextField]()
   
-  let continueButton: TKUIAsyncButton = {
-    let button = TKUIAsyncButton(content: TKUIActionButton(category: .primary, size: .large))
-    return button
-  }()
+  let continueButton = TKButton()
   let continueButtonContainer = TKPaddingContainerView()
-  
   
   // MARK: - Init
   
@@ -59,17 +55,11 @@ public final class TKCheckRecoveryPhraseView: UIView, ConfigurableView {
 
     public let titleDescriptionModel: TKTitleDescriptionView.Model
     public let inputs: [InputModel]
-    public let continueButtonModel: TKUIActionButton.Model
-    public let continueButtonAction: () async -> Void
     
     public init(titleDescriptionModel: TKTitleDescriptionView.Model,
-                inputs: [InputModel],
-                continueButtonModel: TKUIActionButton.Model,
-                continueButtonAction: @escaping () async -> Void) {
+                inputs: [InputModel]) {
       self.titleDescriptionModel = titleDescriptionModel
       self.inputs = inputs
-      self.continueButtonModel = continueButtonModel
-      self.continueButtonAction = continueButtonAction
     }
   }
   
@@ -81,9 +71,9 @@ public final class TKCheckRecoveryPhraseView: UIView, ConfigurableView {
     model.inputs
       .enumerated()
       .forEach { index, inputModel in
-        let textField = TKMnemonicTextInputField()
+        let textField = TKMnemonicTextField()
         textField.indexNumber = inputModel.index
-        textField.didEditText = { text in
+        textField.didUpdateText = { text in
           inputModel.didUpdateText(text)
         }
         textField.didBeginEditing = {
@@ -95,21 +85,17 @@ public final class TKCheckRecoveryPhraseView: UIView, ConfigurableView {
         textField.shouldPaste = { text in
           inputModel.shouldPaste(text)
         }
-        textField.shouldReturn = { [weak self] in
+        textField.didTapReturn = { [weak self] in
           let nextIndex = index + 1
           if nextIndex < model.inputs.count {
             self?.inputTextFields[nextIndex].becomeFirstResponder()
           }
-          return true
         }
         
         contentStackView.addArrangedSubview(textField)
         contentStackView.setCustomSpacing(.afterWordInputSpacing, after: textField)
         inputTextFields.append(textField)
       }
-    
-    continueButton.configure(model: model.continueButtonModel)
-    continueButton.addTapAction(model.continueButtonAction)
     contentStackView.addArrangedSubview(continueButtonContainer)
   }
   

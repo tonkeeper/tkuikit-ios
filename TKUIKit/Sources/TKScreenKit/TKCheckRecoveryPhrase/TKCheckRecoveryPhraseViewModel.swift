@@ -7,6 +7,7 @@ public protocol TKCheckRecoveryPhraseModuleOutput: AnyObject {
 
 protocol TKCheckRecoveryPhraseViewModel: AnyObject {
   var didUpdateModel: ((TKCheckRecoveryPhraseView.Model) -> Void)? { get set }
+  var didUpdateContinueButton: ((TKButton.Configuration) -> Void)? { get set }
   var didUpdateInputValidationState: ((Int, Bool) -> Void)? { get set }
   var didUpdateIsButtonEnabled: ((Bool) -> Void)? { get set }
   
@@ -29,12 +30,16 @@ final class TKCheckRecoveryPhraseViewModelImplementation: TKCheckRecoveryPhraseV
   // MARK: - TKCheckRecoveryPhraseViewModel
   
   var didUpdateModel: ((TKCheckRecoveryPhraseView.Model) -> Void)?
+  var didUpdateContinueButton: ((TKButton.Configuration) -> Void)?
   var didUpdateInputValidationState: ((Int, Bool) -> Void)?
   var didUpdateIsButtonEnabled: ((Bool) -> Void)?
   
   func viewDidLoad() {
     didUpdateModel?(createModel())
     didUpdateIsButtonEnabled?(false)
+    continueButtonConfiguration.action = { [weak self] in
+      self?.didTapContinueButton()
+    }
   }
   
   // MARK: - State
@@ -45,6 +50,11 @@ final class TKCheckRecoveryPhraseViewModelImplementation: TKCheckRecoveryPhraseV
     .sorted()
   
   private var input = [Int: String]()
+  private var continueButtonConfiguration: TKButton.Configuration {
+    didSet {
+      didUpdateContinueButton?(continueButtonConfiguration)
+    }
+  }
 
   // MARK: - Configuration
   
@@ -54,6 +64,12 @@ final class TKCheckRecoveryPhraseViewModelImplementation: TKCheckRecoveryPhraseV
   
   init(provider: TKCheckRecoveryPhraseProvider) {
     self.provider = provider
+    var continueButtonConfiguration = TKButton.Configuration.actionButtonConfiguration(
+      category: .primary, 
+      size: .large
+    )
+    continueButtonConfiguration.content.title = .plainString("Continue")
+    self.continueButtonConfiguration = continueButtonConfiguration
   }
 }
 
@@ -86,14 +102,10 @@ private extension TKCheckRecoveryPhraseViewModelImplementation {
           shouldPaste: { _ in true }
         )
       }
-    
-    let continueButtonModel = TKUIActionButton.Model(title: provider.buttonTitle)
-    
+
     return TKCheckRecoveryPhraseView.Model(
       titleDescriptionModel: titleDescriptionModel,
-      inputs: inputs,
-      continueButtonModel: continueButtonModel,
-      continueButtonAction: { [weak self] in await self?.continueButtonAction() }
+      inputs: inputs
     )
   }
   
@@ -108,24 +120,20 @@ private extension TKCheckRecoveryPhraseViewModelImplementation {
     }
     didUpdateIsButtonEnabled?(isButtonEnabled)
   }
-
-  func continueButtonAction() async {
-    Task {
-      let phrase = provider.phrase
-      let inputValidationStates: [Bool] = {
-        indexes.enumerated().map { index, value in
-          phrase[value] == input[value]
-        }
-      }()
-      let isValid = inputValidationStates.allSatisfy { $0 }
-      Task { @MainActor in
-        inputValidationStates.enumerated().forEach { index, value in
-          didUpdateInputValidationState?(index, value)
-        }
-        guard isValid else { return }
-        didCheckRecoveryPhrase?()
+  
+  func didTapContinueButton() {
+    let phrase = provider.phrase
+    let inputValidationStates: [Bool] = {
+      indexes.enumerated().map { index, value in
+        phrase[value] == input[value]
       }
+    }()
+    let isValid = inputValidationStates.allSatisfy { $0 }
+    inputValidationStates.enumerated().forEach { index, value in
+      didUpdateInputValidationState?(index, value)
     }
+    guard isValid else { return }
+    didCheckRecoveryPhrase?()
   }
 }
 
