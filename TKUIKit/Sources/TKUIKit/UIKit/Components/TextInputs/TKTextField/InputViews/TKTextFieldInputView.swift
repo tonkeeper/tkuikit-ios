@@ -32,7 +32,10 @@ public final class TKTextFieldInputView: UIControl, TKTextFieldInputViewControl 
   }
   public var inputText: String {
     get { textInputControl.inputText }
-    set { textInputControl.inputText = newValue }
+    set {
+      textInputControl.inputText = newValue
+      updateTextAction()
+    }
   }
   public var textFieldState: TKTextFieldState = .inactive {
     didSet {

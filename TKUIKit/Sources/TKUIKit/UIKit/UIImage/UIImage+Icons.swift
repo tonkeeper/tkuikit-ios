@@ -66,6 +66,10 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-gear-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var gearOutline: UIImage {
+          .imageWithName("Icons/28/ic-gear-outline-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
         public static var arrowDownOutline: UIImage {
           .imageWithName("Icons/28/ic-arrow-down-outline-28")
           .withRenderingMode(.alwaysTemplate)
