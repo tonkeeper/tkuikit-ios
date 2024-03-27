@@ -82,6 +82,11 @@ open class TKButton: UIControl {
     super.setContentHuggingPriority(priority, for: axis)
     buttonContentView.setContentHuggingPriority(priority, for: axis)
   }
+  
+  open override func setContentCompressionResistancePriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+    super.setContentCompressionResistancePriority(priority, for: axis)
+    buttonContentView.setContentCompressionResistancePriority(priority, for: axis)
+  }
 }
 
 private extension TKButton {

@@ -2,18 +2,45 @@ import UIKit
 
 public final class TKTextField: UIControl {
   
+  public struct RightItem {
+    public enum Mode {
+      case always
+      case empty
+      case nonEmpty
+    }
+    
+    public let view: UIView
+    public let mode: Mode
+    
+    public init(view: UIView, mode: Mode) {
+      self.view = view
+      self.mode = mode
+    }
+  }
+  
   public var isActive: Bool {
     textFieldInputView.isActive
   }
   
   public var text: String! {
-    get { textFieldInputView.text }
-    set { textFieldInputView.text = newValue }
+    get { textFieldInputView.inputText }
+    set { textFieldInputView.inputText = newValue }
+  }
+  
+  public var placeholder: String {
+    get { textFieldInputView.placeholder }
+    set { textFieldInputView.placeholder = newValue }
   }
   
   public var didUpdateText: ((String) -> Void)?
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
+  
+  public var rightItems = [RightItem]() {
+    didSet {
+      didSetRightItems()
+    }
+  }
   
   var textFieldState: TKTextFieldState = .inactive {
     didSet {
@@ -23,6 +50,7 @@ public final class TKTextField: UIControl {
   
   private let backgroundView = TKTextFieldBackgroundView()
   private let textFieldInputView: TKTextFieldInputView
+  private let rightItemsContainer = UIStackView()
   
   public init(textFieldInputView: TKTextFieldInputView) {
     self.textFieldInputView = textFieldInputView
@@ -49,6 +77,7 @@ private extension TKTextField {
   func setup() {
     textFieldInputView.didUpdateText = { [weak self] text in
       self?.didUpdateText?(text)
+      self?.updateRightItemsVisibility()
     }
     
     textFieldInputView.didBeginEditing = { [weak self] in
@@ -65,6 +94,7 @@ private extension TKTextField {
     
     addSubview(backgroundView)
     addSubview(textFieldInputView)
+    addSubview(rightItemsContainer)
     
     setupConstraints()
     
@@ -79,7 +109,13 @@ private extension TKTextField {
     }
     
     textFieldInputView.snp.makeConstraints { make in
-      make.edges.equalTo(self)
+      make.top.left.bottom.equalTo(self)
+      make.right.equalTo(rightItemsContainer.snp.left)
+    }
+    
+    rightItemsContainer.snp.makeConstraints { make in
+      make.top.right.bottom.equalTo(self)
+      make.width.equalTo(0).priority(.high)
     }
   }
   
@@ -102,6 +138,30 @@ private extension TKTextField {
       textFieldState = .error
     case (true, false):
       textFieldState = .error
+    }
+  }
+  
+  func didSetRightItems() {
+    rightItemsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    rightItems.forEach { rightItem in
+      rightItem.view.setContentHuggingPriority(.required, for: .horizontal)
+      rightItem.view.setContentCompressionResistancePriority(.required, for: .horizontal)
+      rightItemsContainer.addArrangedSubview(rightItem.view)
+    }
+    updateRightItemsVisibility()
+  }
+  
+  func updateRightItemsVisibility() {
+    let isEmpty = text.isEmpty
+    rightItems.forEach { rightItem in
+      switch rightItem.mode {
+      case .always:
+        rightItem.view.isHidden = false
+      case .empty:
+        rightItem.view.isHidden = !isEmpty
+      case .nonEmpty:
+        rightItem.view.isHidden = isEmpty
+      }
     }
   }
 }

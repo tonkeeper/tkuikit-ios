@@ -9,6 +9,11 @@ public final class TKTextInputTextViewControl: UITextView, TKTextFieldInputViewC
     isFirstResponder
   }
   
+  public var inputText: String {
+    get { text }
+    set { text = newValue }
+  }
+  
   public init() {
     let storage = NSTextStorage()
     let manager = NSLayoutManager()
@@ -26,11 +31,19 @@ public final class TKTextInputTextViewControl: UITextView, TKTextFieldInputViewC
 
 private extension TKTextInputTextViewControl {
   func setup() {
+    keyboardType = .alphabet
+    autocapitalizationType = .none
+    autocorrectionType = .no
+    keyboardAppearance = .dark
     isScrollEnabled = false
     backgroundColor = .clear
     delegate = self
-    textContainer.lineFragmentPadding = TKTextStyle.body1.lineSpacing
-    textContainerInset = .zero
+    textContainer.lineFragmentPadding = 0
+    textContainerInset = .init(
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0)
     typingAttributes = TKTextStyle.body1.getAttributes(color: .Text.primary, alignment: .left, lineBreakMode: .byWordWrapping)
   }
 }

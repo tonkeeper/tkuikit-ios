@@ -118,11 +118,17 @@ class TKButtonContentView: UIView {
     titleLabel.setContentHuggingPriority(priority, for: axis)
     imageView.setContentHuggingPriority(priority, for: axis)
   }
+  
+  override func setContentCompressionResistancePriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+    super.setContentCompressionResistancePriority(priority, for: axis)
+    contentContainerView.setContentCompressionResistancePriority(priority, for: axis)
+    titleLabel.setContentCompressionResistancePriority(priority, for: axis)
+    imageView.setContentCompressionResistancePriority(priority, for: axis)
+  }
 }
 
 private extension TKButtonContentView {
   func setup() {
-    contentContainerView.setContentCompressionResistancePriority(.required, for: .horizontal)
     imageView.contentMode = .center
     imageView.tintColor = iconTintColor
     
