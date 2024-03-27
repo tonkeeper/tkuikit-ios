@@ -4,13 +4,26 @@ import SnapKit
 public protocol TKTextFieldInputViewControl: UIView {
   var isActive: Bool { get }
   var inputText: String { get set }
-  var tintColor: UIColor! { get set }
+  var textFieldState: TKTextFieldState { get set }
+  var accessoryView: UIView? { get set }
   var didUpdateText: ((String) -> Void)? { get set }
   var didBeginEditing: (() -> Void)? { get set }
   var didEndEditing: (() -> Void)? { get set }
+  var shouldPaste: ((String) -> Bool)? { get set }
 }
 
 public final class TKTextFieldInputView: UIControl, TKTextFieldInputViewControl {
+  
+  public enum ClearButtonMode {
+    case never
+    case whileEditingNotEmpty
+  }
+  
+  public var clearButtonMode: ClearButtonMode = .whileEditingNotEmpty {
+    didSet {
+      didSetClearButtonMode()
+    }
+  }
   
   // MARK: - TKTextFieldInputViewControl
   
@@ -21,13 +34,30 @@ public final class TKTextFieldInputView: UIControl, TKTextFieldInputViewControl 
     get { textInputControl.inputText }
     set { textInputControl.inputText = newValue }
   }
-  public override var tintColor: UIColor! {
-    get { textInputControl.tintColor }
-    set { textInputControl.tintColor = newValue }
+  public var textFieldState: TKTextFieldState = .inactive {
+    didSet {
+      didUpdateState()
+    }
+  }
+  public var accessoryView: UIView? {
+    get { textInputControl.accessoryView }
+    set { textInputControl.accessoryView = newValue }
   }
   public var didUpdateText: ((String) -> Void)?
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
+  public var shouldPaste: ((String) -> Bool)?
+  
+  public var padding: UIEdgeInsets = .zero {
+    didSet {
+      let isActive = textInputControlRightEdgeConstraint?.isActive ?? false
+      textInputControl.snp.remakeConstraints { make in
+        make.top.left.bottom.equalTo(self).inset(padding)
+        textInputControlRightEdgeConstraint = make.right.equalTo(self).inset(padding).constraint
+      }
+      textInputControlRightEdgeConstraint?.isActive = isActive
+    }
+  }
   
   // MARK: - Properties
   
@@ -103,7 +133,6 @@ public final class TKTextFieldInputView: UIControl, TKTextFieldInputViewControl 
 
 private extension TKTextFieldInputView {
   func setup() {
-    
     addSubview(textInputControl)
     addSubview(clearButton)
     addSubview(placeholderLabel)
@@ -120,6 +149,10 @@ private extension TKTextFieldInputView {
       self?.didEndEditing?()
     }
     
+    textInputControl.shouldPaste = { [weak self] in
+      self?.shouldPaste?($0) ?? true
+    }
+    
     addAction(UIAction(handler: { [weak self] _ in
       self?.textInputControl.becomeFirstResponder()
     }), for: .touchUpInside)
@@ -129,8 +162,8 @@ private extension TKTextFieldInputView {
   
   func setupConstraints() {
     textInputControl.snp.makeConstraints { make in
-      make.top.left.bottom.equalTo(self).inset(UIEdgeInsets.inputControlPadding)
-      textInputControlRightEdgeConstraint = make.right.equalTo(self).inset(UIEdgeInsets.inputControlPadding).constraint
+      make.top.left.bottom.equalTo(self).inset(padding)
+      textInputControlRightEdgeConstraint = make.right.equalTo(self).inset(padding).constraint
       textInputControlRightClearButtonConstraint = make.right.equalTo(clearButton.snp.left).constraint
     }
     textInputControlRightClearButtonConstraint?.deactivate()
@@ -141,7 +174,13 @@ private extension TKTextFieldInputView {
   }
   
   func updateClearButtonVisibility() {
-    let isClearButtonVisible = !inputText.isEmpty && isActive
+    let isClearButtonVisible: Bool
+    switch clearButtonMode {
+    case .never: 
+      isClearButtonVisible = false
+    case .whileEditingNotEmpty:
+      isClearButtonVisible = !inputText.isEmpty && isActive
+    }
     if isClearButtonVisible {
       clearButton.isHidden = false
       textInputControlRightEdgeConstraint?.deactivate()
@@ -167,12 +206,12 @@ private extension TKTextFieldInputView {
     let scale: CGFloat = isTop ? .placeholderScale : 1
     let transform = isTop ? CGAffineTransform(scaleX: .placeholderScale, y: .placeholderScale) : .identity
     placeholderLabel.transform = transform
-    let horizontalSpace = bounds.width - UIEdgeInsets.inputControlPadding.left - UIEdgeInsets.inputControlPadding.right
+    let horizontalSpace = bounds.width - padding.left - padding.right
     let sizeThatFits = placeholderLabel.sizeThatFits(CGSize(width: horizontalSpace, height: 0))
     let size = CGSize(width: min(horizontalSpace, sizeThatFits.width), height: sizeThatFits.height)
-    let y: CGFloat = isTop ? 12 : UIEdgeInsets.inputControlPadding.top
+    let y: CGFloat = isTop ? 12 : padding.top
     let frame = CGRect(
-      x: UIEdgeInsets.inputControlPadding.left,
+      x: padding.left,
       y: y,
       width: size.width * scale,
       height: size.height * scale
@@ -192,10 +231,14 @@ private extension TKTextFieldInputView {
       self.updateTextInputAndPlaceholderLayoutAndScale()
     }
   }
-}
-
-private extension UIEdgeInsets {
-  static var inputControlPadding = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
+  
+  func didUpdateState() {
+    textInputControl.textFieldState = textFieldState
+  }
+  
+  func didSetClearButtonMode() {
+    updateClearButtonVisibility()
+  }
 }
 
 private extension CGFloat {

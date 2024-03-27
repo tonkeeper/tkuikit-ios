@@ -89,7 +89,7 @@ class TKButtonContentView: UIView {
     let imageViewWidth = min(availableWidth, imageSizeThatFits.width)
     let imageViewHeight = min(availableHeight, imageSizeThatFits.height)
     
-    let titleWidth = availableWidth - imageViewWidth
+    let titleWidth = availableWidth - imageViewWidth - spacing
     let titleHeigth = min(availableWidth - imageViewHeight, titleSizeThatFits.height)
     
     let imageViewX: CGFloat

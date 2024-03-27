@@ -1,20 +1,10 @@
 import UIKit
 
-public final class TKTextField: UIControl {
+public final class TKMnemonicTextField: UIControl {
   
-  public struct RightItem {
-    public enum Mode {
-      case always
-      case empty
-      case nonEmpty
-    }
-    
-    public let view: UIView
-    public let mode: Mode
-    
-    public init(view: UIView, mode: Mode) {
-      self.view = view
-      self.mode = mode
+  public var indexNumber: Int = 0{
+    didSet {
+      indexNumberLabel.text = "\(indexNumber):"
     }
   }
   
@@ -38,15 +28,15 @@ public final class TKTextField: UIControl {
     set { textFieldInputView.placeholder = newValue }
   }
   
+  public var accessoryView: UIView? {
+    get { textFieldInputView.accessoryView }
+    set { textFieldInputView.accessoryView = newValue }
+  }
+  
   public var didUpdateText: ((String) -> Void)?
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
-  
-  public var rightItems = [RightItem]() {
-    didSet {
-      didSetRightItems()
-    }
-  }
+  public var shouldPaste: ((String) -> Bool)?
   
   var textFieldState: TKTextFieldState = .inactive {
     didSet {
@@ -56,10 +46,18 @@ public final class TKTextField: UIControl {
   
   private let backgroundView = TKTextFieldBackgroundView()
   private let textFieldInputView: TKTextFieldInputView
-  private let rightItemsContainer = UIStackView()
+  private let indexNumberLabel: UILabel = {
+    let label = UILabel()
+    label.font = TKTextStyle.body1.font
+    label.textColor = .Text.secondary
+    label.textAlignment = .right
+    label.numberOfLines = 1
+    label.isUserInteractionEnabled = false
+    return label
+  }()
   
-  public init(textFieldInputView: TKTextFieldInputView) {
-    self.textFieldInputView = textFieldInputView
+  public init() {
+    self.textFieldInputView = TKTextFieldInputView(textInputControl: TKTextInputTextFieldControl())
     super.init(frame: .zero)
     setup()
   }
@@ -79,11 +77,10 @@ public final class TKTextField: UIControl {
   }
 }
 
-private extension TKTextField {
+private extension TKMnemonicTextField {
   func setup() {
     textFieldInputView.didUpdateText = { [weak self] text in
       self?.didUpdateText?(text)
-      self?.updateRightItemsVisibility()
     }
     
     textFieldInputView.didBeginEditing = { [weak self] in
@@ -97,15 +94,16 @@ private extension TKTextField {
     }
     
     textFieldInputView.shouldPaste = { [weak self] in
-      self?.textFieldInputView.shouldPaste?($0) ?? true
+      self?.shouldPaste?($0) ?? true
     }
     
     textFieldInputView.padding = UIEdgeInsets(
-      top: 20,
-      left: 16,
-      bottom: 20,
+      top: 16,
+      left: 12,
+      bottom: 16,
       right: 16
     )
+    textFieldInputView.clearButtonMode = .never
     
     didUpdateState()
     
@@ -113,8 +111,7 @@ private extension TKTextField {
     
     addSubview(backgroundView)
     addSubview(textFieldInputView)
-    addSubview(rightItemsContainer)
-    
+    addSubview(indexNumberLabel)
     setupConstraints()
     
     addAction(UIAction(handler: { [weak self] _ in
@@ -128,13 +125,14 @@ private extension TKTextField {
     }
     
     textFieldInputView.snp.makeConstraints { make in
-      make.top.left.bottom.equalTo(self)
-      make.right.equalTo(rightItemsContainer.snp.left)
+      make.top.bottom.right.equalTo(self)
+      make.left.equalTo(indexNumberLabel.snp.right)
     }
     
-    rightItemsContainer.snp.makeConstraints { make in
-      make.top.right.bottom.equalTo(self)
-      make.width.equalTo(0).priority(.high)
+    indexNumberLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(self)
+      make.left.equalTo(self).inset(12)
+      make.width.equalTo(28)
     }
   }
   
@@ -155,30 +153,6 @@ private extension TKTextField {
       textFieldState = .error
     case (true, false):
       textFieldState = .error
-    }
-  }
-  
-  func didSetRightItems() {
-    rightItemsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    rightItems.forEach { rightItem in
-      rightItem.view.setContentHuggingPriority(.required, for: .horizontal)
-      rightItem.view.setContentCompressionResistancePriority(.required, for: .horizontal)
-      rightItemsContainer.addArrangedSubview(rightItem.view)
-    }
-    updateRightItemsVisibility()
-  }
-  
-  func updateRightItemsVisibility() {
-    let isEmpty = text.isEmpty
-    rightItems.forEach { rightItem in
-      switch rightItem.mode {
-      case .always:
-        rightItem.view.isHidden = false
-      case .empty:
-        rightItem.view.isHidden = !isEmpty
-      case .nonEmpty:
-        rightItem.view.isHidden = isEmpty
-      }
     }
   }
 }
