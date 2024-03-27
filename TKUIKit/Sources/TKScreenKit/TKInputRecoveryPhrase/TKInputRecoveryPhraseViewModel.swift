@@ -7,6 +7,7 @@ public protocol TKInputRecoveryPhraseModuleOutput: AnyObject {
 
 protocol TKInputRecoveryPhraseViewModel: AnyObject {
   var didUpdateModel: ((TKInputRecoveryPhraseView.Model) -> Void)? { get set }
+  var didUpdateContinueButton: ((TKButton.Configuration) -> Void)? { get set }
   var didUpdateInputValidationState: ((Int, Bool) -> Void)? { get set }
   var didUpdateText: ((Int, String) -> Void)? { get set }
   var didSelectInput: ((Int) -> Void)? { get set }
@@ -35,6 +36,7 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   // MARK: - TKInputRecoveryPhraseViewModel
   
   var didUpdateModel: ((TKInputRecoveryPhraseView.Model) -> Void)?
+  var didUpdateContinueButton: ((TKButton.Configuration) -> Void)?
   var didUpdateInputValidationState: ((Int, Bool) -> Void)?
   var didUpdateText: ((Int, String) -> Void)?
   var didSelectInput: ((Int) -> Void)?
@@ -43,6 +45,9 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   var didUpdateSuggests: ((TKInputRecoveryPhraseSuggestsView.Model) -> Void)?
   
   func viewDidLoad() {
+    continueButtonConfiguration.action = { [weak self] in
+      self?.didTapContinueButton()
+    }
     didUpdateModel?(createModel())
   }
   
@@ -50,6 +55,12 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
   
   private var phrase = Array(repeating: "", count: .wordsCount)
   private var activeIndex: Int?
+  
+  private var continueButtonConfiguration: TKButton.Configuration {
+    didSet {
+      didUpdateContinueButton?(continueButtonConfiguration)
+    }
+  }
   
   // MARK: - Configuration
   
@@ -66,6 +77,9 @@ final class TKInputRecoveryPhraseViewModelImplementation: TKInputRecoveryPhraseV
        suggestsProvider: TKInputRecoveryPhraseSuggestsProvider) {
     self.validator = validator
     self.suggestsProvider = suggestsProvider
+    var continueButtonConfiguration = TKButton.Configuration.actionButtonConfiguration(category: .primary, size: .large)
+    continueButtonConfiguration.content.title = .plainString("Continue")
+    self.continueButtonConfiguration = continueButtonConfiguration
   }
 }
 
@@ -95,13 +109,9 @@ private extension TKInputRecoveryPhraseViewModelImplementation {
         )
       }
     
-    let continueButtonModel = TKUIActionButton.Model(title: "Continue")
-    
     return TKInputRecoveryPhraseView.Model(
       titleDescriptionModel: titleDescriptionModel,
-      inputs: inputs,
-      continueButtonModel: continueButtonModel,
-      continueButtonAction: { [weak self] in await self?.continueButtonAction() }
+      inputs: inputs
     )
   }
   
@@ -158,33 +168,31 @@ private extension TKInputRecoveryPhraseViewModelImplementation {
     return false
   }
   
-  func continueButtonAction() async {
-    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-      dispatchQueue.async { [weak self, phrase] in
-        guard let self = self else { return }
-        let isPhraseValid = self.validator.validatePhrase(phrase)
-        if !isPhraseValid {
-          let wordsValidation = phrase.map {
-            self.validator.validateWord($0)
+  func didTapContinueButton() {
+    continueButtonConfiguration.showsLoader = true
+    dispatchQueue.async { [weak self, phrase] in
+      guard let self = self else { return }
+      let isPhraseValid = self.validator.validatePhrase(phrase)
+      if !isPhraseValid {
+        let wordsValidation = phrase.map {
+          self.validator.validateWord($0)
+        }
+        DispatchQueue.main.async {
+          self.continueButtonConfiguration.showsLoader = false
+          wordsValidation.enumerated().forEach { index, isValid in
+            self.didUpdateInputValidationState?(index, isValid)
           }
-          DispatchQueue.main.async {
-            wordsValidation.enumerated().forEach { index, isValid in
-              self.didUpdateInputValidationState?(index, isValid)
-            }
-          }
-        } else {
-          DispatchQueue.main.async {
-            let closure = {
-              continuation.resume()
-            }
-            self.didInputRecoveryPhrase?(phrase, closure)
-          }
+        }
+      } else {
+        DispatchQueue.main.async {
+          self.didInputRecoveryPhrase?(phrase, {
+            self.continueButtonConfiguration.showsLoader = false
+          })
         }
       }
     }
-    
   }
-  
+
   func updateSuggests(index: Int) {
     let input = phrase[index]
     dispatchQueue.async { [weak self] in

@@ -22,12 +22,9 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
     return view
   }()
   
-  var inputTextFields = [TKMnemonicTextInputField]()
+  var inputTextFields = [TKMnemonicTextField]()
   
-  let continueButton: TKUIAsyncButton = {
-    let button = TKUIAsyncButton(content: TKUIActionButton(category: .primary, size: .large))
-    return button
-  }()
+  let continueButton = TKButton()
   let continueButtonContainer = TKPaddingContainerView()
   
   let suggestsView = TKInputRecoveryPhraseSuggestsView()
@@ -61,17 +58,11 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
 
     public let titleDescriptionModel: TKTitleDescriptionView.Model
     public let inputs: [InputModel]
-    public let continueButtonModel: TKUIActionButton.Model
-    public let continueButtonAction: () async -> Void
     
     public init(titleDescriptionModel: TKTitleDescriptionView.Model,
-                inputs: [InputModel],
-                continueButtonModel: TKUIActionButton.Model,
-                continueButtonAction: @escaping () async -> Void) {
+                inputs: [InputModel]) {
       self.titleDescriptionModel = titleDescriptionModel
       self.inputs = inputs
-      self.continueButtonModel = continueButtonModel
-      self.continueButtonAction = continueButtonAction
     }
   }
   
@@ -82,10 +73,10 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
     inputTextFields = []
     model.inputs
       .forEach { inputModel in
-        let textField = TKMnemonicTextInputField()
+        let textField = TKMnemonicTextField()
         textField.accessoryView = suggestsView
         textField.indexNumber = inputModel.index
-        textField.didEditText = { text in
+        textField.didUpdateText = { text in
           inputModel.didUpdateText(text)
         }
         textField.didBeginEditing = {
@@ -102,9 +93,6 @@ public final class TKInputRecoveryPhraseView: UIView, ConfigurableView {
         contentStackView.setCustomSpacing(.afterWordInputSpacing, after: textField)
         inputTextFields.append(textField)
       }
-    
-    continueButton.configure(model: model.continueButtonModel)
-    continueButton.addTapAction(model.continueButtonAction)
     contentStackView.addArrangedSubview(continueButtonContainer)
   }
   

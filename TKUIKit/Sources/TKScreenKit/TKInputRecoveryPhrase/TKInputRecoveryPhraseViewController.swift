@@ -51,6 +51,10 @@ private extension TKInputRecoveryPhraseViewController {
       customView.configure(model: model)
     }
     
+    viewModel.didUpdateContinueButton = { [weak customView] configuration in
+      customView?.continueButton.configuration = configuration
+    }
+    
     viewModel.didUpdateInputValidationState = { [customView] index, isValid in
       customView.inputTextFields[index].isValid = isValid
     }
