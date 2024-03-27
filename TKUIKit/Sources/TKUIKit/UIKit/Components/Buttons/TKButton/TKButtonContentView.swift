@@ -42,7 +42,7 @@ class TKButtonContentView: UIView {
   
   let titleLabel = UILabel()
   let imageView = UIImageView()
-  private let contentContainerView = UIView()
+  let contentContainerView = UIView()
   
   override init(frame: CGRect) {
     super.init(frame: frame)

@@ -37,11 +37,18 @@ public final class TKLoaderView: UIView {
   private var isAnimating = false
   private var observer: NSObject?
   
-  private let size: Size
-  private let style: Style
+  public var size: Size {
+    didSet {
+      invalidateIntrinsicContentSize()
+      didUpdateSize()
+    }
+  }
+  public var style: Style {
+    didSet { didUpdateStyle() }
+  }
   
   public init(size: Size,
-       style: Style) {
+              style: Style) {
     self.size = size
     self.style = style
     super.init(frame: .zero)
@@ -80,10 +87,10 @@ public final class TKLoaderView: UIView {
     
     let circleRect = CGRect(
       origin: CGPoint(
-        x: bounds.width/2 - size.side/2,
-        y: bounds.height/2 - size.side/2
+        x: bounds.width/2 - size.circleSide/2,
+        y: bounds.height/2 - size.circleSide/2
       ),
-      size: CGSize(width: size.side, height: size.side)
+      size: CGSize(width: size.circleSide, height: size.circleSide)
     )
     let path = UIBezierPath(
       ovalIn: circleRect
@@ -121,9 +128,8 @@ public final class TKLoaderView: UIView {
 
 private extension TKLoaderView {
   func setup() {
-    topCircleLayer.strokeColor = style.tintColor.cgColor
-    topCircleLayer.lineWidth = size.circleWidth
-    bottomCircleLayer.lineWidth = size.circleWidth
+    didUpdateStyle()
+    didUpdateSize()
     
     layer.addSublayer(bottomCircleLayer)
     layer.addSublayer(topCircleLayer)
@@ -133,6 +139,15 @@ private extension TKLoaderView {
   func willEnterForeground() {
     guard isAnimating else { return }
     startAnimation()
+  }
+  
+  func didUpdateSize() {
+    topCircleLayer.lineWidth = size.circleWidth
+    bottomCircleLayer.lineWidth = size.circleWidth
+  }
+  
+  func didUpdateStyle() {
+    topCircleLayer.strokeColor = style.tintColor.cgColor
   }
 }
 

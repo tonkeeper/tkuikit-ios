@@ -36,4 +36,12 @@ public enum TKActionButtonSize {
     case .large: return .label1
     }
   }
+  
+  public var loaderViewSize: TKLoaderView.Size {
+    switch self {
+    case .small: return .small
+    case .medium: return .small
+    case .large: return .medium
+    }
+  }
 }

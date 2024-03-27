@@ -13,6 +13,9 @@ public extension TKButton {
     public var backgroundColors: [TKButtonState: UIColor]
     public var contentAlpha: [TKButtonState: CGFloat]
     public var cornerRadius: CGFloat
+    public var showsLoader: Bool
+    public var loaderSize: TKLoaderView.Size
+    public var loaderStyle: TKLoaderView.Style
     public var action: (() -> Void)?
     
     public init(content: Content = Content(),
@@ -26,6 +29,9 @@ public extension TKButton {
                 backgroundColors: [TKButtonState : UIColor] = [.normal: .clear],
                 contentAlpha: [TKButtonState : CGFloat] = [.normal: 1, .disabled: 0.48],
                 cornerRadius: CGFloat = 0,
+                showsLoader: Bool = false,
+                loaderSize: TKLoaderView.Size = .small,
+                loaderStyle: TKLoaderView.Style = .primary,
                 action: (() -> Void)? = nil) {
       self.content = content
       self.contentPadding = contentPadding
@@ -38,6 +44,9 @@ public extension TKButton {
       self.backgroundColors = backgroundColors
       self.contentAlpha = contentAlpha
       self.cornerRadius = cornerRadius
+      self.showsLoader = showsLoader
+      self.loaderSize = loaderSize
+      self.loaderStyle = loaderStyle
       self.action = action
     }
   }
@@ -60,7 +69,8 @@ public extension TKButton.Configuration {
 }
 
 public extension TKButton.Configuration {
-  static func actionButtonConfiguration(category: TKActionButtonCategory, size: TKActionButtonSize) -> TKButton.Configuration {
+  static func actionButtonConfiguration(category: TKActionButtonCategory,
+                                        size: TKActionButtonSize) -> TKButton.Configuration {
     TKButton.Configuration(
       content: Content(),
       contentPadding: size.padding,
@@ -72,6 +82,7 @@ public extension TKButton.Configuration {
         .disabled: category.disabledBackgroundColor
       ],
       cornerRadius: size.cornerRadius,
+      loaderSize: size.loaderViewSize,
       action: nil
     )
   }

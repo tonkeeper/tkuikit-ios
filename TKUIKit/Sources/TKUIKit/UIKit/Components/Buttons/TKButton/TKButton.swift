@@ -23,8 +23,9 @@ open class TKButton: UIControl {
   open override var isEnabled: Bool {
     didSet { didUpdateControlState() }
   }
-  
+
   let buttonContentView = TKButtonContentView()
+  let loaderView = TKLoaderView(size: .small, style: .primary)
   
   var buttonState: TKButtonState = .normal {
     didSet { didUpdateButtonState() }
@@ -76,14 +77,22 @@ open class TKButton: UIControl {
       height: contentViewHeight
     )
     buttonContentView.frame = contentViewFrame
+    
+    loaderView.sizeToFit()
+    loaderView.center = CGPoint(
+      x: bounds.width/2,
+      y: bounds.height/2
+    )
   }
   
-  open override func setContentHuggingPriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+  open override func setContentHuggingPriority(_ priority: UILayoutPriority,
+                                               for axis: NSLayoutConstraint.Axis) {
     super.setContentHuggingPriority(priority, for: axis)
     buttonContentView.setContentHuggingPriority(priority, for: axis)
   }
   
-  open override func setContentCompressionResistancePriority(_ priority: UILayoutPriority, for axis: NSLayoutConstraint.Axis) {
+  open override func setContentCompressionResistancePriority(_ priority: UILayoutPriority,
+                                                             for axis: NSLayoutConstraint.Axis) {
     super.setContentCompressionResistancePriority(priority, for: axis)
     buttonContentView.setContentCompressionResistancePriority(priority, for: axis)
   }
@@ -92,7 +101,11 @@ open class TKButton: UIControl {
 private extension TKButton {
   func setup() {
     buttonContentView.isUserInteractionEnabled = false
+    
+    loaderView.isHidden = true
+    
     addSubview(buttonContentView)
+    addSubview(loaderView)
     
     didUpdateConfiguration()
     
@@ -128,6 +141,10 @@ private extension TKButton {
     self.buttonContentView.iconTintColor = configuration.iconTintColor
     self.buttonContentView.backgroundColor = configuration.backgroundColors[buttonState]
     self.buttonContentView.cornerRadius = configuration.cornerRadius
+    self.loaderView.size = configuration.loaderSize
+    self.loaderView.style = configuration.loaderStyle
+    self.buttonContentView.contentContainerView.isHidden = configuration.showsLoader
+    self.loaderView.isHidden = !configuration.showsLoader
     switch configuration.content.title {
     case .plainString(let string):
       self.buttonContentView.title = string.withTextStyle(configuration.textStyle, color: configuration.textColor, alignment: .center)
