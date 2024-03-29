@@ -2,6 +2,7 @@ import UIKit
 
 public final class TKListItemTitleSubtitleView: UIView, ReusableView {
   let titleLabel = UILabel()
+  let tagView = TKTagView()
   let subtitleLabel = UILabel()
   
   public override init(frame: CGRect) {
@@ -34,26 +35,51 @@ public final class TKListItemTitleSubtitleView: UIView, ReusableView {
     let subtitleOrigin = CGPoint(x: 0, y: bounds.height - subtitleSize.height)
     let subtitleFrame = CGRect(origin: subtitleOrigin, size: subtitleSize)
     
-    let titleSize = CGSize(width: bounds.width, height: bounds.height - subtitleSize.height)
+    let topWidth: CGFloat
+    let tagViewSize: CGSize
+    if !tagView.isHidden {
+      let tagViewSizeToFit = tagView.systemLayoutSizeFitting(CGSize(width: bounds.width, height: 0))
+      tagViewSize = tagViewSizeToFit
+      topWidth = bounds.width - tagViewSizeToFit.width - .tagViewSpacing
+    } else {
+      topWidth = bounds.width
+      tagViewSize = .zero
+    }
+
+    let titleSize = titleLabel.tkSizeThatFits(topWidth)
     let titleOrigin = CGPoint.zero
     let titleFrame = CGRect(origin: titleOrigin, size: titleSize)
     
+    let tagViewOrigin = CGPoint(x: titleFrame.maxX + .tagViewSpacing, y: titleFrame.midY - tagViewSize.height/2)
+    let tagViewFrame = CGRect(origin: tagViewOrigin, size: tagViewSize)
+    
     titleLabel.frame = titleFrame
+    tagView.frame = tagViewFrame
     subtitleLabel.frame = subtitleFrame
   }
   
   public struct Model {
     public let title: NSAttributedString?
+    public let tagModel: TKTagView.Model?
     public let subtitle: NSAttributedString?
     
-    public init(title: NSAttributedString?, subtitle: NSAttributedString?) {
+    public init(title: NSAttributedString?,
+                tagModel: TKTagView.Model? = nil,
+                subtitle: NSAttributedString?) {
       self.title = title
+      self.tagModel = tagModel
       self.subtitle = subtitle
     }
   }
   
   public func configure(model: Model) {
     titleLabel.attributedText = model.title
+    if let tagModel = model.tagModel {
+      tagView.configure(model: tagModel)
+      tagView.isHidden = false
+    } else {
+      tagView.isHidden = true
+    }
     subtitleLabel.attributedText = model.subtitle
   }
   
@@ -68,5 +94,10 @@ private extension TKListItemTitleSubtitleView {
     titleLabel.numberOfLines = 1
     addSubview(titleLabel)
     addSubview(subtitleLabel)
+    addSubview(tagView)
   }
+}
+
+private extension CGFloat {
+  static let tagViewSpacing: CGFloat = 6
 }

@@ -13,6 +13,7 @@ public extension TKButton {
     public var backgroundColors: [TKButtonState: UIColor]
     public var contentAlpha: [TKButtonState: CGFloat]
     public var cornerRadius: CGFloat
+    public var isEnabled: Bool
     public var showsLoader: Bool
     public var loaderSize: TKLoaderView.Size
     public var loaderStyle: TKLoaderView.Style
@@ -29,6 +30,7 @@ public extension TKButton {
                 backgroundColors: [TKButtonState : UIColor] = [.normal: .clear],
                 contentAlpha: [TKButtonState : CGFloat] = [.normal: 1, .disabled: 0.48],
                 cornerRadius: CGFloat = 0,
+                isEnabled: Bool = true,
                 showsLoader: Bool = false,
                 loaderSize: TKLoaderView.Size = .small,
                 loaderStyle: TKLoaderView.Style = .primary,
@@ -44,6 +46,7 @@ public extension TKButton {
       self.backgroundColors = backgroundColors
       self.contentAlpha = contentAlpha
       self.cornerRadius = cornerRadius
+      self.isEnabled = isEnabled
       self.showsLoader = showsLoader
       self.loaderSize = loaderSize
       self.loaderStyle = loaderStyle

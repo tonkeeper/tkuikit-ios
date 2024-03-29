@@ -110,6 +110,10 @@ public extension UIImage {
           .imageWithName("Icons/28/ic-key-28")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var magnifyingGlass: UIImage {
+          .imageWithName("Icons/28/ic-magnifying-glass-28")
+          .withRenderingMode(.alwaysTemplate)
+        }
         public static var testnet: UIImage {
           .imageWithName("Icons/28/ic-testnet-28")
           .withRenderingMode(.alwaysTemplate)

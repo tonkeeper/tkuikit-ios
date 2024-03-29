@@ -1,7 +1,7 @@
 import UIKit
 
 open class TKButton: UIControl {
-  
+
   public var configuration = TKButton.Configuration() {
     didSet {
       didUpdateConfiguration()
@@ -145,6 +145,8 @@ private extension TKButton {
     self.loaderView.style = configuration.loaderStyle
     self.buttonContentView.contentContainerView.isHidden = configuration.showsLoader
     self.loaderView.isHidden = !configuration.showsLoader
+    self.isUserInteractionEnabled = !configuration.showsLoader
+    self.isEnabled = configuration.isEnabled
     switch configuration.content.title {
     case .plainString(let string):
       self.buttonContentView.title = string.withTextStyle(configuration.textStyle, color: configuration.textColor, alignment: .center)

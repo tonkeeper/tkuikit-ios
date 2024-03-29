@@ -41,6 +41,7 @@ public final class TKTextField: UIControl {
   public var didUpdateText: ((String) -> Void)?
   public var didBeginEditing: (() -> Void)?
   public var didEndEditing: (() -> Void)?
+  public var shouldPaste: ((String) -> Bool)?
   
   public var rightItems = [RightItem]() {
     didSet {
@@ -97,7 +98,7 @@ private extension TKTextField {
     }
     
     textFieldInputView.shouldPaste = { [weak self] in
-      self?.textFieldInputView.shouldPaste?($0) ?? true
+      self?.shouldPaste?($0) ?? true
     }
     
     textFieldInputView.padding = UIEdgeInsets(
