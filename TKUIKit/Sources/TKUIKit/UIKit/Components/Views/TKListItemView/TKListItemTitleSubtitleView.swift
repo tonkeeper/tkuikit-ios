@@ -81,6 +81,7 @@ public final class TKListItemTitleSubtitleView: UIView, ReusableView {
       tagView.isHidden = true
     }
     subtitleLabel.attributedText = model.subtitle
+    setNeedsLayout()
   }
   
   public func prepareForReuse() {
