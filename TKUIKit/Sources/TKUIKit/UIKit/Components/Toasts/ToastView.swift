@@ -64,13 +64,28 @@ public final class ToastView: UIView, ConfigurableView {
     let title: String
     let shape: Shape
     let isActivity: Bool
+    let backgroundColor: UIColor
+    let foregroundColor: UIColor
+    
+    init(title: String,
+      shape: Shape,
+      isActivity: Bool,
+      backgroundColor: UIColor = .Background.contentTint,
+      foregroundColor: UIColor = .Text.primary) {
+      self.title = title
+      self.shape = shape
+      self.isActivity = isActivity
+      self.backgroundColor = backgroundColor
+      self.foregroundColor = foregroundColor
+    }
   }
   
   public func configure(model: Model) {
     layer.cornerRadius = model.shape.cornerRadius
+    backgroundColor = model.backgroundColor
     titleLabel.attributedText = model.title
       .withTextStyle(.label2,
-                     color: .Text.primary,
+                     color: model.foregroundColor,
                      alignment: .center)
     
     if model.isActivity {
@@ -96,8 +111,6 @@ public final class ToastView: UIView, ConfigurableView {
 
 private extension ToastView {
   func setup() {
-    backgroundColor = .Background.contentTint
-    
     addSubview(stackView)
     stackView.addArrangedSubview(activityView)
     stackView.addArrangedSubview(titleLabel)

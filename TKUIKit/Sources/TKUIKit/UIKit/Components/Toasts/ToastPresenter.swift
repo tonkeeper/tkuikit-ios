@@ -8,18 +8,24 @@ public final class ToastPresenter {
       case duration(TimeInterval)
     }
     
-    let title: String
-    let shape: ToastView.Model.Shape
-    let isActivity: Bool
-    let dismissRule: DismissRule
+    public var title: String
+    public var shape: ToastView.Model.Shape
+    public var isActivity: Bool
+    public var backgroundColor: UIColor
+    public var foregroundColor: UIColor
+    public var dismissRule: DismissRule
     
     public init(title: String,
                 shape: ToastView.Model.Shape = .oval,
                 isActivity: Bool = false,
+                backgroundColor: UIColor,
+                foregroundColor: UIColor,
                 dismissRule: DismissRule = .default) {
       self.title = title
       self.shape = shape
       self.isActivity = isActivity
+      self.backgroundColor = backgroundColor
+      self.foregroundColor = foregroundColor
       self.dismissRule = dismissRule
     }
   }
@@ -93,7 +99,13 @@ public final class ToastPresenter {
   }
   
   private static func show(configuration: Configuration) {
-    let model = ToastView.Model(title: configuration.title, shape: configuration.shape, isActivity: configuration.isActivity)
+    let model = ToastView.Model(
+      title: configuration.title,
+      shape: configuration.shape,
+      isActivity: configuration.isActivity,
+      backgroundColor: configuration.backgroundColor,
+      foregroundColor: configuration.foregroundColor
+    )
     
     let durationDismiss: (TimeInterval) -> Void = { duration in
       let dispatchItem = DispatchWorkItem(block: {

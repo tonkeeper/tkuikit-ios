@@ -32,6 +32,10 @@ public final class TKUITagView: UIView, TKConfigurableView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public override var intrinsicContentSize: CGSize {
+    sizeThatFits(CGSize(width: CGFloat.infinity, height: 0))
+  }
+  
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
     let labelSizeThatFits = label.sizeThatFits(size)
     let fitWidth = labelSizeThatFits.width + UIEdgeInsets.textPadding.left + UIEdgeInsets.textPadding.right + .leftPadding
