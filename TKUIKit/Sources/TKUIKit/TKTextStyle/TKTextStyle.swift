@@ -1,6 +1,6 @@
 import UIKit
 
-public struct TKTextStyle {
+public struct TKTextStyle: Hashable {
   public let font: UIFont
   public let lineHeight: CGFloat
   public let uppercased: Bool
