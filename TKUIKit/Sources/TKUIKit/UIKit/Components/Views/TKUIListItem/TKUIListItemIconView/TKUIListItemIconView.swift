@@ -14,6 +14,7 @@ public final class TKUIListItemIconView: UIView, TKConfigurableView {
     public enum IconConfiguration: Hashable {
       case none
       case image(TKUIListItemImageIconView.Configuration)
+      case emoji(TKUIListItemEmojiIconView.Configuration)
     }
     
     public let iconConfiguration: IconConfiguration
@@ -31,6 +32,8 @@ public final class TKUIListItemIconView: UIView, TKConfigurableView {
       configureNone()
     case .image(let configuration):
       configure(imageIconConfiguration: configuration)
+    case .emoji(let configuration):
+      configure(emojiIconConfiguration: configuration)
     }
     self.alignment = configuration.alignment
     setNeedsLayout()
@@ -76,6 +79,18 @@ private extension TKUIListItemIconView {
       imageIconView.configure(configuration: imageIconConfiguration)
       addSubview(imageIconView)
       iconView = imageIconView
+    }
+  }
+  
+  func configure(emojiIconConfiguration: TKUIListItemEmojiIconView.Configuration) {
+    if let emojiIconView = iconView as? TKUIListItemEmojiIconView {
+      emojiIconView.configure(configuration: emojiIconConfiguration)
+    } else {
+      iconView?.removeFromSuperview()
+      let emojiIconView = TKUIListItemEmojiIconView()
+      emojiIconView.configure(configuration: emojiIconConfiguration)
+      addSubview(emojiIconView)
+      iconView = emojiIconView
     }
   }
 }
