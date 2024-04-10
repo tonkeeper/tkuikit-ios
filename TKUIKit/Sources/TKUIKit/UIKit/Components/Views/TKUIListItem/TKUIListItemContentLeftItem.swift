@@ -46,11 +46,16 @@ public final class TKUIListItemContentLeftItem: UIView, TKConfigurableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let tagSizeThatFits = tagView.sizeThatFits(bounds.size)
-    let tagSize = CGSize(
-      width: min(tagSizeThatFits.width, bounds.width),
-      height: tagSizeThatFits.height
-    )
+    let tagSize: CGSize
+    if tagView.isHidden {
+      tagSize = .zero
+    } else {
+      let tagSizeThatFits = tagView.sizeThatFits(bounds.size)
+      tagSize = CGSize(
+        width: min(tagSizeThatFits.width, bounds.width),
+        height: tagSizeThatFits.height
+      )
+    }
     
     let titleSizeThatFits = titleLabel.sizeThatFits(bounds.size)
     let titleSize = CGSize(
