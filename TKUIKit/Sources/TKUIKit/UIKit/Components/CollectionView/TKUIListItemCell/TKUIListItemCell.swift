@@ -15,15 +15,33 @@ public class TKUIListItemCell: TKCollectionViewNewCell, TKConfigurableView {
   public struct Configuration: Hashable {
     public let id: String
     public let listItemConfiguration: TKUIListItemView.Configuration
+    public let isHighlightable: Bool
+    public let selectionClosure: (() -> Void)?
     
-    public init(id: String, listItemConfiguration: TKUIListItemView.Configuration) {
+    public init(id: String, 
+                listItemConfiguration: TKUIListItemView.Configuration,
+                isHighlightable: Bool = true,
+                selectionClosure: (() -> Void)? ) {
       self.id = id
+      self.isHighlightable = isHighlightable
       self.listItemConfiguration = listItemConfiguration
+      self.selectionClosure = selectionClosure
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+      hasher.combine(id)
+      hasher.combine(listItemConfiguration)
+    }
+    
+    public static func ==(lhs: Configuration, rhs: Configuration) -> Bool {
+      lhs.id == rhs.id && lhs.listItemConfiguration == rhs.listItemConfiguration
     }
   }
   
   public func configure(configuration: Configuration) {
+    isHighlightable = configuration.isHighlightable
     listItemView.configure(configuration: configuration.listItemConfiguration)
+    setNeedsLayout()
   }
   
   public override func contentSize(targetWidth: CGFloat) -> CGSize {

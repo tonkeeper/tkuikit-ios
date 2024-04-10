@@ -88,6 +88,7 @@ public final class TKUIListItemContentRightItem: UIView, TKConfigurableView {
     subtitleLabel.attributedText = configuration.subtitle
     descriptionLabel.attributedText = configuration.description
     descriptionLabel.numberOfLines = configuration.descriptionNumberOfLines
+    setNeedsLayout()
   }
 }
 

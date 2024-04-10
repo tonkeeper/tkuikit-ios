@@ -21,6 +21,8 @@ public final class TKUITagView: UIView, TKConfigurableView {
     label.text = configuration.text.uppercased()
     label.textColor = configuration.textColor
     colorView.backgroundColor = configuration.backgroundColor
+    setNeedsLayout()
+    invalidateIntrinsicContentSize()
   }
   
   public override init(frame: CGRect) {

@@ -4,7 +4,8 @@ public final class TKReusableContainerView: UICollectionReusableView, ReusableVi
   private var contentView: UIView?
   
   public func setContentView(_ contentView: UIView?) {
-    contentView?.removeFromSuperview()
+    self.contentView?.removeFromSuperview()
+    self.contentView = nil
     guard let contentView else { return }
     addSubview(contentView)
     

@@ -34,18 +34,19 @@ public final class TKUIListItemContentView: UIView, TKConfigurableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let rightItemSize = rightItem.sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
+    let rightItemSizeToFit = rightItem.sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
+    let rightItemSize = CGSize(width: rightItemSizeToFit.width, height: bounds.height)
     let rightItemFrame = CGRect(origin: CGPoint(x: bounds.width - rightItemSize.width, y: 0),
                                 size: rightItemSize)
     
-    let leftItemSize = leftItem.sizeThatFits(
+    let leftItemSizeToFit = leftItem.sizeThatFits(
       CGSize(
         width: bounds.width - rightItemSize.width,
         height: bounds.height
       )
     )
+    let leftItemSize = CGSize(width: leftItemSizeToFit.width, height: bounds.height)
     let leftItemFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: leftItemSize)
-    
     rightItem.frame = rightItemFrame
     leftItem.frame = leftItemFrame
   }
@@ -74,6 +75,7 @@ public final class TKUIListItemContentView: UIView, TKConfigurableView {
     } else {
       rightItem.isHidden = true
     }
+    setNeedsLayout()
   }
 }
 

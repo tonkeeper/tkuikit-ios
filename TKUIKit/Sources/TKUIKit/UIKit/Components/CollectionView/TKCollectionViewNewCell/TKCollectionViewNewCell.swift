@@ -31,6 +31,7 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
   public var isSeparatorVisible: Bool = true {
     didSet { updateSeparatorVisibility() }
   }
+  public var isHighlightable: Bool = true
   
   public let contentContainerView = TKPassthroughView()
   
@@ -73,7 +74,7 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
   open override func updateConfiguration(using state: UICellConfigurationState) {
     super.updateConfiguration(using: state)
     
-    hightlightView.backgroundColor = state.isHighlighted ? hightlightColor : .clear
+    hightlightView.backgroundColor = state.isHighlighted && isHighlightable ? hightlightColor : .clear
     UIView.performWithoutAnimation {
       setNeedsLayout()
       layoutIfNeeded()

@@ -30,7 +30,7 @@ public final class TKUIListItemAccessoryView: UIView, TKConfigurableView {
       addSubview(textAccessoryView)
       accessoryView = textAccessoryView
     case .none:
-      break
+      accessoryView = nil
     }
     setNeedsLayout()
   }
