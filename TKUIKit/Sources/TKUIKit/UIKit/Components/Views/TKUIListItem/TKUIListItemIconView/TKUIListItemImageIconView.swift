@@ -35,7 +35,7 @@ public final class TKUIListItemImageIconView: UIView, TKConfigurableView, Reusab
   
   public struct Configuration: Hashable {
     public enum Image: Hashable {
-      case image(UIImage)
+      case image(UIImage?)
       case asyncImage(URL?, ImageDownloadTask)
       
       public func hash(into hasher: inout Hasher) {
