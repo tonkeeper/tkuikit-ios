@@ -263,7 +263,7 @@ private extension TKCollectionViewNewCell {
   }
   
   func updateSeparatorVisibility() {
-    let isVisible = isSeparatorVisible && !configurationState.isHighlighted
+    let isVisible = isSeparatorVisible && !configurationState.isHighlighted && !isLastCellInSection
     separatorView.isHidden = !isVisible
   }
   
@@ -302,7 +302,7 @@ private extension TKCollectionViewNewCell {
   }
   
   func didUpdateCellOrderParameter() {
-    isSeparatorVisible = !isLastCellInSection
+    updateSeparatorVisibility()
     updateCornerRadius()
   }
   
