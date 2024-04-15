@@ -11,7 +11,7 @@ public final class TKLoaderView: UIView {
   private let bottomCircleLayer: CAShapeLayer = {
     let layer = CAShapeLayer()
     layer.fillColor = UIColor.clear.cgColor
-    layer.strokeColor = UIColor.Icon.tertiary.cgColor
+    layer.strokeColor = UIColor.Icon.secondary.cgColor
     layer.lineCap = .round
     return layer
   }()
@@ -114,13 +114,13 @@ public final class TKLoaderView: UIView {
     }
   }
   
-  func startAnimation() {
+  public func startAnimation() {
     isAnimating = true
     topCircleLayer.removeAnimation(forKey: .rotationAnimationKey)
     topCircleLayer.add(rotationAnimation, forKey: .rotationAnimationKey)
   }
 
-  func stopAnimation() {
+  public func stopAnimation() {
     isAnimating = false
     topCircleLayer.removeAnimation(forKey: .rotationAnimationKey)
   }
