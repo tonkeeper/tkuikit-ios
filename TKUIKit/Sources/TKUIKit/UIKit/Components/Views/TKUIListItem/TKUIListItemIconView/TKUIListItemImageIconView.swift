@@ -5,6 +5,7 @@ public final class TKUIListItemImageIconView: UIView, TKConfigurableView, Reusab
   private let imageView = UIImageView()
   
   private var size: CGSize = .zero
+  private var cornerRadius: CGFloat = 0
   private var imageDownloadTask: ImageDownloadTask?
   
   public override init(frame: CGRect) {
@@ -20,7 +21,6 @@ public final class TKUIListItemImageIconView: UIView, TKConfigurableView, Reusab
     super.layoutSubviews()
     
     imageView.frame = bounds
-    layer.cornerRadius = bounds.width/2
   }
   
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -62,15 +62,18 @@ public final class TKUIListItemImageIconView: UIView, TKConfigurableView, Reusab
     public let tintColor: UIColor
     public let backgroundColor: UIColor
     public let size: CGSize
+    public let cornerRadius: CGFloat
     
     public init(image: Image,
                 tintColor: UIColor,
                 backgroundColor: UIColor,
-                size: CGSize) {
+                size: CGSize,
+                cornerRadius: CGFloat) {
       self.image = image
       self.tintColor = tintColor
       self.backgroundColor = backgroundColor
       self.size = size
+      self.cornerRadius = cornerRadius
     }
   }
   
@@ -79,12 +82,15 @@ public final class TKUIListItemImageIconView: UIView, TKConfigurableView, Reusab
     case .image(let image):
       imageView.image = image
     case .asyncImage(_, let imageDownloadTask):
-      imageDownloadTask.start(imageView: imageView, size: configuration.size, cornerRadius: configuration.size.width/2)
+      imageDownloadTask.start(imageView: imageView, size: configuration.size, cornerRadius: configuration.cornerRadius)
       self.imageDownloadTask = imageDownloadTask
     }
     imageView.tintColor = configuration.tintColor
     backgroundColor = configuration.backgroundColor
     size = configuration.size
+    cornerRadius = configuration.cornerRadius
+    layer.cornerRadius = configuration.cornerRadius
+    setNeedsLayout()
   }
 }
 
