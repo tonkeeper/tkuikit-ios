@@ -11,6 +11,11 @@ let package = Package(
             name: "TKUIKit",
             targets: ["TKUIKit"]),
         .library(
+            name: "TKUIKitDynamic",
+            type: .dynamic,
+            targets: ["TKUIKit"]
+        ),
+        .library(
           name: "TKScreenKit",
           targets: ["TKScreenKit"]
         )
