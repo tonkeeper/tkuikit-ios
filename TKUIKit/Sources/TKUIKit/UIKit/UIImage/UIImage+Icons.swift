@@ -44,6 +44,10 @@ public extension UIImage {
           .imageWithName("Icons/16/ic-xmark-circle-16")
           .withRenderingMode(.alwaysTemplate)
         }
+        public static var saleBadge: UIImage {
+          .imageWithName("Icons/16/ic-sale-badge-16")
+          .withRenderingMode(.alwaysTemplate)
+        }
       }
       public enum Size28 {
         public static var qrViewFinder: UIImage {
@@ -172,6 +176,17 @@ public extension UIImage {
         }
         public static var fingerprint: UIImage {
           .imageWithName("Icons/36/ic-fingerprint-36")
+          .withRenderingMode(.alwaysTemplate)
+        }
+      }
+      public enum Size44 {
+        public static var tonCurrency: UIImage {
+          .imageWithName("Icons/44/ton_currency")
+        }
+      }
+      public enum Size56 {
+        public static var flashlightOff: UIImage {
+          .imageWithName("Icons/56/ic-flashlight-off-56")
           .withRenderingMode(.alwaysTemplate)
         }
       }
