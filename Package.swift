@@ -18,6 +18,11 @@ let package = Package(
         .library(
           name: "TKScreenKit",
           targets: ["TKScreenKit"]
+        ),
+        .library(
+          name: "TKScreenKitDynamic",
+          type: .dynamic,
+          targets: ["TKScreenKit"]
         )
     ],
     dependencies: [
