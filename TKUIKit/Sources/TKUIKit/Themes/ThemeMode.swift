@@ -1,9 +1,9 @@
 import Foundation
 
 public enum ThemeMode: String, CaseIterable {
-  case system
   case blue
   case dark
+  case system
   
   public var title: String {
     switch self {
