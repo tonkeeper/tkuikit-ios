@@ -6,10 +6,14 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
   
   public struct Model: Hashable {
     public let title: String?
+    public let textStyle: TKTextStyle
     public let buttonContent: TKButton.Configuration.Content?
     
-    public init(title: String?, buttonContent: TKButton.Configuration.Content? = nil) {
+    public init(title: String?,
+                textStyle: TKTextStyle,
+                buttonContent: TKButton.Configuration.Content? = nil) {
       self.title = title
+      self.textStyle = textStyle
       self.buttonContent = buttonContent
     }
   }
@@ -53,6 +57,7 @@ public final class TKListTitleView: UIView, ReusableView, TKCollectionViewSupple
   
   public func configure(model: Model) {
     titleLabel.text = model.title
+    titleLabel.font = model.textStyle.font
     if let buttonContent = model.buttonContent {
       button.configuration.content = buttonContent
       button.isHidden = false
