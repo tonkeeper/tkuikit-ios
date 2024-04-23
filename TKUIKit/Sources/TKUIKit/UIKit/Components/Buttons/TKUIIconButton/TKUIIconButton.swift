@@ -10,6 +10,10 @@ public final class TKUIIconButton: TKUIButton<TKUIIconButtonContentView, TKUIBut
     )
   }
   
+  public override var intrinsicContentSize: CGSize {
+    CGSize(width: UIView.noIntrinsicMetric, height: 80)
+  }
+  
   public override func setupButtonState() {
     let iconColor: UIColor
     let titleColor: UIColor
