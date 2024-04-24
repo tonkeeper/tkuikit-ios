@@ -126,9 +126,9 @@ extension TKCollectionViewCell {
   
   func layoutSeparator() {
     let separatorViewFrame = CGRect(x: separatorLeftPadding,
-                                    y: bounds.height - .separatorhHeight,
+                                    y: bounds.height - TKUIKit.Constants.separatorWidth,
                                     width: bounds.width - separatorLeftPadding,
-                                    height: .separatorhHeight)
+                                    height: TKUIKit.Constants.separatorWidth)
     separatorView.frame = separatorViewFrame
   }
   
@@ -213,6 +213,5 @@ extension TKCollectionViewCell {
 
 private extension CGFloat {
   static let cornerRadius: CGFloat = 16
-  static let separatorhHeight: CGFloat = 0.5
 }
 

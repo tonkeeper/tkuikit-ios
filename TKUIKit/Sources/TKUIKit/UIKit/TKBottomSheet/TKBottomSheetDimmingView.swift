@@ -17,22 +17,22 @@ final class TKBottomSheetDimmingView: UIView {
   }
   
   func prepareForPresentationTransition() {
-      alpha = dismissAlpha
+    alpha = dismissAlpha
   }
-
+  
   func performPresentationTransition() {
-      alpha = presentAlpha
+    alpha = presentAlpha
   }
-
+  
   func prepareForDimissalTransition() {}
-
+  
   func performDismissalTransition() {
-      alpha = dismissAlpha
+    alpha = dismissAlpha
   }
 }
 
 private extension TKBottomSheetDimmingView {
   func setup() {
-    backgroundColor = .black
+    backgroundColor = .Background.overlayStrong
   }
 }

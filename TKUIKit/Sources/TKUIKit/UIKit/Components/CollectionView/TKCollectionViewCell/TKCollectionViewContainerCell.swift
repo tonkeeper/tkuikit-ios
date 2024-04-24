@@ -115,6 +115,5 @@ extension TKCollectionViewContainerCell {
 
 private extension CGFloat {
   static let cornerRadius: CGFloat = 16
-  static let separatorhHeight: CGFloat = 0.5
 }
 

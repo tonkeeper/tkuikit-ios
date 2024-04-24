@@ -156,7 +156,7 @@ private extension TKNavigationBar {
       
       separatorView.leftAnchor.constraint(equalTo: leftAnchor),
       separatorView.rightAnchor.constraint(equalTo: rightAnchor),
-      separatorView.heightAnchor.constraint(equalToConstant: 0.5),
+      separatorView.heightAnchor.constraint(equalToConstant: Constants.separatorWidth),
       separatorView.bottomAnchor.constraint(equalTo: barView.bottomAnchor),
       
       rightButtonsStackView.rightAnchor.constraint(equalTo: barView.rightAnchor, constant: -8),

@@ -86,6 +86,7 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
     }
     updateAccessoryContainersAlpha()
     updateSeparatorVisibility()
+    updateCornerRadius()
   }
   
   open override func layoutSubviews() {
@@ -93,9 +94,9 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
     hightlightView.frame = contentView.bounds
     separatorView.frame = CGRect(
       x: contentViewPadding.left,
-      y: bounds.height - 0.5,
+      y: bounds.height - TKUIKit.Constants.separatorWidth,
       width: bounds.width - contentViewPadding.left,
-      height: 0.5
+      height: TKUIKit.Constants.separatorWidth
     )
     layoutContentContainer()
   }
@@ -263,7 +264,7 @@ private extension TKCollectionViewNewCell {
   }
   
   func updateSeparatorVisibility() {
-    let isVisible = isSeparatorVisible && !configurationState.isHighlighted && !isLastCellInSection
+    let isVisible = isSeparatorVisible && !configurationState.isHighlighted && !isLastCellInSection && !configurationState.isReordering
     separatorView.isHidden = !isVisible
   }
   
@@ -309,17 +310,20 @@ private extension TKCollectionViewNewCell {
   func updateCornerRadius() {
     let maskedCorners: CACornerMask
     let isMasksToBounds: Bool
-    switch (isFirstCellInSection, isLastCellInSection) {
-    case (true, true):
+    switch (isFirstCellInSection, isLastCellInSection, configurationState.isReordering) {
+    case (_, _, true):
       maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
       isMasksToBounds = true
-    case (false, true):
+    case (true, true, false):
+      maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+      isMasksToBounds = true
+    case (false, true, false):
       maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
       isMasksToBounds = true
-    case (true, false):
+    case (true, false, false):
       maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
       isMasksToBounds = true
-    case (false, false):
+    case (false, false, false):
       maskedCorners = []
       isMasksToBounds = false
     }
