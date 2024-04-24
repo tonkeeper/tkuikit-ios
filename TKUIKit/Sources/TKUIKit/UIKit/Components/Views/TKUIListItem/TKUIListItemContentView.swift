@@ -15,18 +15,24 @@ public final class TKUIListItemContentView: UIView, TKConfigurableView {
   }
   
   public override func sizeThatFits(_ size: CGSize) -> CGSize {
-    let rightItemSize = rightItem.sizeThatFits(
-      CGSize(width: size.width,
-             height: size.height)
-    )
+    var width = size.width
+    var rightItemHeight: CGFloat = 0
+    if !rightItem.isHidden {
+      let rightItemSize = rightItem.sizeThatFits(
+        CGSize(width: size.width,
+               height: size.height)
+      )
+      width -= rightItemSize.width
+      rightItemHeight = rightItemSize.height
+    }
     let leftItemSize = leftItem.sizeThatFits(
       CGSize(
-        width: size.width - rightItemSize.width,
+        width: width,
         height: size.height
       )
     )
     
-    let height = [rightItemSize.height, leftItemSize.height].max() ?? 0
+    let height = [rightItemHeight, leftItemSize.height].max() ?? 0
     return CGSize(width: size.width,
                   height: height)
   }
@@ -34,20 +40,26 @@ public final class TKUIListItemContentView: UIView, TKConfigurableView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     
-    let rightItemSizeToFit = rightItem.sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
-    let rightItemSize = CGSize(width: rightItemSizeToFit.width, height: bounds.height)
-    let rightItemFrame = CGRect(origin: CGPoint(x: bounds.width - rightItemSize.width, y: 0),
-                                size: rightItemSize)
+    var width = bounds.width
+    
+    if !rightItem.isHidden {
+      let rightItemSizeToFit = rightItem.sizeThatFits(CGSize(width: bounds.width, height: bounds.height))
+      let rightItemSize = CGSize(width: rightItemSizeToFit.width, height: bounds.height)
+      let rightItemFrame = CGRect(origin: CGPoint(x: bounds.width - rightItemSize.width, y: 0),
+                                  size: rightItemSize)
+      width -= rightItemSize.width
+      rightItem.frame = rightItemFrame
+    }
     
     let leftItemSizeToFit = leftItem.sizeThatFits(
       CGSize(
-        width: bounds.width - rightItemSize.width,
+        width: width,
         height: bounds.height
       )
     )
     let leftItemSize = CGSize(width: leftItemSizeToFit.width, height: bounds.height)
     let leftItemFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: leftItemSize)
-    rightItem.frame = rightItemFrame
+    
     leftItem.frame = leftItemFrame
   }
   
