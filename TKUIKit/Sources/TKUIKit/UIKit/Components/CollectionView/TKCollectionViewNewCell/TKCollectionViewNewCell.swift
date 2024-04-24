@@ -12,7 +12,7 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
     
   public var hightlightColor: UIColor = .clear
   public var separatorColor: UIColor = .Separator.common {
-    didSet { separatorView.backgroundColor = separatorColor }
+    didSet { separatorView.color = separatorColor }
   }
   
   public var contentViewPadding: UIEdgeInsets = .zero {
@@ -36,7 +36,7 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
   public let contentContainerView = TKPassthroughView()
   
   private let hightlightView = UIView()
-  private let separatorView = UIView()
+  private let separatorView = TKSeparatorView()
   private let accessoryContainer: UIStackView = {
     let stackView = UIStackView()
     stackView.alignment = .center
@@ -86,7 +86,6 @@ open class TKCollectionViewNewCell: UICollectionViewCell, OrderConfigurableCell,
     }
     updateAccessoryContainersAlpha()
     updateSeparatorVisibility()
-    updateCornerRadius()
   }
   
   open override func layoutSubviews() {
@@ -159,7 +158,7 @@ private extension TKCollectionViewNewCell {
     contentView.addSubview(editingAccessoryContainer)
     contentView.addSubview(separatorView)
     
-    separatorView.backgroundColor = separatorColor
+    separatorView.color = separatorColor
     
     layer.cornerRadius = 16
   }
@@ -310,24 +309,54 @@ private extension TKCollectionViewNewCell {
   func updateCornerRadius() {
     let maskedCorners: CACornerMask
     let isMasksToBounds: Bool
-    switch (isFirstCellInSection, isLastCellInSection, configurationState.isReordering) {
-    case (_, _, true):
+    switch (isFirstCellInSection, isLastCellInSection) {
+    case (true, true):
       maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
       isMasksToBounds = true
-    case (true, true, false):
-      maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-      isMasksToBounds = true
-    case (false, true, false):
+    case (false, true):
       maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
       isMasksToBounds = true
-    case (true, false, false):
+    case (true, false):
       maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
       isMasksToBounds = true
-    case (false, false, false):
+    case (false, false):
       maskedCorners = []
       isMasksToBounds = false
     }
     layer.maskedCorners = maskedCorners
     layer.masksToBounds = isMasksToBounds
+  }
+}
+
+public class TKSeparatorView: UIView {
+
+  public var color: UIColor = .Separator.common {
+    didSet {
+      setNeedsDisplay()
+    }
+  }
+  
+  public override var frame: CGRect {
+    didSet {
+      setNeedsDisplay()
+    }
+  }
+  
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    backgroundColor = .clear
+  }
+  
+  public required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  public override func draw(_ rect: CGRect) {
+    let context = UIGraphicsGetCurrentContext()
+    context?.setLineWidth(0.5)
+    context?.move(to: CGPoint(x: 0, y: bounds.height))
+    context?.addLine(to: CGPoint(x: bounds.width, y: bounds.height))
+    context?.setStrokeColor(color.cgColor)
+    context?.strokePath()
   }
 }

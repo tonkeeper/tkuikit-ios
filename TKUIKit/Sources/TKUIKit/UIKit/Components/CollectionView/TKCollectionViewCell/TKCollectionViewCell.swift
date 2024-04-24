@@ -42,8 +42,8 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
   let contentContainer = UIView()
   
   let separatorView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .Separator.common
+    let view = TKSeparatorView()
+    view.color = .Separator.common
     return view
   }()
   let accessoryView = TKListItemCollectionViewCellAccessoryView(mode: .none)
@@ -95,6 +95,7 @@ open class TKCollectionViewCell: UICollectionViewCell, ReusableView {
     accessoryView.alpha = !state.isEditing && !(state.isSelected && isSelectable) && accessoryType != .none ? 1 : 0
     
     layoutContentContainer()
+    setupSeparator()
   }
   
   func setup() {

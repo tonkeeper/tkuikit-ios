@@ -3,8 +3,8 @@ import UIKit
 public final class TKUIScrollView: UIScrollView {
   override init(frame: CGRect) {
     super.init(frame: frame)
-    delaysContentTouches = false
     canCancelContentTouches = true
+    showsVerticalScrollIndicator = false
   }
   
   required init?(coder: NSCoder) {

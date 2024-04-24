@@ -19,11 +19,11 @@ public final class TKUIIconButton: TKUIButton<TKUIIconButtonContentView, TKUIBut
     let titleColor: UIColor
     switch buttonState {
     case .disabled:
-      iconColor = .Icon.primary.withAlphaComponent(0.48)
-      titleColor = .Icon.primary.withAlphaComponent(0.48)
+      iconColor = .Icon.primary.withAlphaComponent(0.32)
+      titleColor = .Text.secondary.withAlphaComponent(0.32)
     case .highlighted:
       iconColor = .Icon.primary.withAlphaComponent(0.48)
-      titleColor = .Icon.primary.withAlphaComponent(0.48)
+      titleColor = .Text.secondary.withAlphaComponent(0.48)
     case .normal:
       iconColor = .Icon.primary
       titleColor = .Text.secondary

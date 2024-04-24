@@ -5,6 +5,7 @@ public final class TKUICollectionView: UICollectionView {
                        collectionViewLayout layout: UICollectionViewLayout) {
     super.init(frame: frame, collectionViewLayout: layout)
     canCancelContentTouches = true
+    showsVerticalScrollIndicator = false
   }
   
   required init?(coder: NSCoder) {
