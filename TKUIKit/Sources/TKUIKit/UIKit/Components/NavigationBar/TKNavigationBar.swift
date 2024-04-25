@@ -172,6 +172,7 @@ private extension TKNavigationBar {
   
   func didSetScrollView() {
     if let scrollView = scrollView {
+      setIsLarge(true, animated: false)
       contentOffsetToken = scrollView.observe(\.contentOffset) { [weak self] scrollView, _ in
         let offset = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
         self?.largeBarView.transform = CGAffineTransform(translationX: 0, y: -offset)
