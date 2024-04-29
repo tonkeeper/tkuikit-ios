@@ -359,4 +359,8 @@ public class TKSeparatorView: UIView {
     context?.setStrokeColor(color.cgColor)
     context?.strokePath()
   }
+  
+  public override var intrinsicContentSize: CGSize {
+    CGSize(width: UIView.noIntrinsicMetric, height: 1)
+  }
 }
