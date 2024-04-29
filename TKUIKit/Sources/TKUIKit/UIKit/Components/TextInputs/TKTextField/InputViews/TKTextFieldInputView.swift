@@ -140,16 +140,21 @@ private extension TKTextFieldInputView {
     addSubview(clearButton)
     addSubview(placeholderLabel)
     
-    textInputControl.didUpdateText = { [weak self] _ in
-      self?.updateTextAction()
+    textInputControl.didUpdateText = { [weak self] in
+      guard let self else { return }
+      self.inputText = $0
+      self.didUpdateText?(self.inputText)
+      self.updateTextAction()
     }
     
     textInputControl.didBeginEditing = { [weak self] in
       self?.didBeginEditing?()
+      self?.updateClearButtonVisibility()
     }
     
     textInputControl.didEndEditing = { [weak self] in
       self?.didEndEditing?()
+      self?.updateClearButtonVisibility()
     }
     
     textInputControl.shouldPaste = { [weak self] in
@@ -224,11 +229,11 @@ private extension TKTextFieldInputView {
   
   func clearButtonAction() {
     inputText = ""
+    didUpdateText?(inputText)
     updateTextAction()
   }
   
   func updateTextAction() {
-    didUpdateText?(inputText)
     UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
       self.updateClearButtonVisibility()
       self.updateTextInputAndPlaceholderLayoutAndScale()
