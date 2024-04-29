@@ -23,11 +23,7 @@ final class TKModalCardListItemView: UIControl, ConfigurableView {
   
   private var isRightTopFullString = false
   
-  private let separatorView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .Separator.common
-    return view
-  }()
+  private let separatorView = TKSeparatorView()
   
   private let contentView = UIView()
   private let rightContentView = UIView()
@@ -92,7 +88,7 @@ final class TKModalCardListItemView: UIControl, ConfigurableView {
     layoutLeftLabel()
     layoutRight()
     
-    separatorView.frame = CGRect(x: .contentPadding, y: bounds.height - 0.5, width: bounds.width - .contentPadding, height: 0.5)
+    separatorView.frame = CGRect(x: .contentPadding, y: bounds.height - 1, width: bounds.width - .contentPadding, height: 1)
     invalidateIntrinsicContentSize()
   }
   

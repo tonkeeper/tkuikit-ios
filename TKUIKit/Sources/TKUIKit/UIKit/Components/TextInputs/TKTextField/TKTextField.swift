@@ -30,7 +30,10 @@ public final class TKTextField: UIControl {
   
   public var text: String! {
     get { textFieldInputView.inputText }
-    set { textFieldInputView.inputText = newValue }
+    set { 
+      textFieldInputView.inputText = newValue
+      updateRightItemsVisibility()
+    }
   }
   
   public var placeholder: String {
